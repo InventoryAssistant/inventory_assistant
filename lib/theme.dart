@@ -33,18 +33,18 @@ class ThemeClass {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     colorScheme: const ColorScheme.dark().copyWith(
-      primary: const Color.fromRGBO(25, 25, 122, 1),
-      background: const Color.fromRGBO(39, 39, 190, 1),
+      primary: const Color.fromRGBO(70, 130, 180, 1.0),
+      background: const Color.fromRGBO(60, 60, 60, 1.0),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color.fromRGBO(25, 25, 122, 1),
+      backgroundColor: Color.fromRGBO(80, 140, 200, 1.0),
       foregroundColor: Colors.white,
     ),
     iconTheme: const IconThemeData(
-      color: Color.fromRGBO(25, 25, 122, 1),
+      color: Color.fromRGBO(80, 140, 200, 1),
     ),
     snackBarTheme: const SnackBarThemeData(
-      backgroundColor: Color.fromRGBO(25, 25, 122, 1),
+      backgroundColor: Color.fromRGBO(80, 140, 200, 1),
       contentTextStyle: TextStyle(
         color: Colors.white,
       ),
