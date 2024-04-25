@@ -34,7 +34,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -187,26 +186,24 @@ class _LoginScreenState extends State<LoginScreen> {
               left: BorderSide(color: Colors.black),
             ),
           ),
-          child: MaterialButton(
-            minWidth: double.infinity,
+          child: SizedBox(
+            width: double.infinity,
             height: 60,
-            onPressed: allPassed
-                ? () async {
-                    _login(
-                      emailController.text,
-                      passwordController.text,
-                    );
-                  }
-                : null,
-            color: Colors.redAccent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: const Text(
-              "Login",
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+            child: ElevatedButton(
+              onPressed: allPassed
+                  ? () async {
+                      _login(
+                        emailController.text,
+                        passwordController.text,
+                      );
+                    }
+                  : null,
+              child: const Text(
+                "Login",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
