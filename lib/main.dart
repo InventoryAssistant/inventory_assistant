@@ -56,27 +56,27 @@ class _ScannerPageState extends State<ScannerPage> {
             icon: const Icon(Icons.camera),
             label: const Text('Scan Product'),
           ),
-          if (scanResult != null)
-            Card(
-              child: Column(
-                children: <Widget>[
+          Card(
+            child: Column(
+              children: <Widget>[
+                if (product['name'] != null)
+                  ListTile(
+                    title: const Text('Name'),
+                    subtitle: Text(product['name']),
+                  ),
+                if (product['category'] != null)
+                  ListTile(
+                    title: const Text('Category'),
+                    subtitle: Text(product['category']),
+                  ),
+                if (scanResult != null)
                   ListTile(
                     title: const Text('Barcode'),
                     subtitle: Text(scanResult.rawContent),
                   ),
-                  if (product['name'] != null)
-                    ListTile(
-                      title: const Text('Name'),
-                      subtitle: Text(product['name']),
-                    ),
-                  if (product['category'] != null)
-                    ListTile(
-                      title: const Text('Category'),
-                      subtitle: Text(product['category']),
-                    )
-                ],
-              ),
+              ],
             ),
+          ),
         ],
       ),
     );
@@ -103,10 +103,7 @@ class _ScannerPageState extends State<ScannerPage> {
         // If the response is instore it is from the backup database
         if (json.containsKey("instore")) {
           setState(() {
-            product['name'] = jsonDecode(response.body)['instore']
-                    ['description'] +
-                " " +
-                jsonDecode(response.body)['instore']['name'];
+            product['name'] = "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
             product['category'] = "None";
           });
         }
