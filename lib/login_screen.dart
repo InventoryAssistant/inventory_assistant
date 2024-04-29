@@ -24,13 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool allPassed = false;
 
   @override
-  void initState() {
-    super.initState();
-    // Check if the user should be logged in automatically
-    autoLoginCheck();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -187,20 +180,14 @@ class _LoginScreenState extends State<LoginScreen> {
         debugPrint(response.body);
       }
 
-      // If the response contains an access token, the login was successful
-      if (parsed['access_token'] != null) {
+      // If the response contains an access token and refresh token, the login was successful
+      if (parsed['access_token'] != null && parsed['refresh_token'] != null) {
         loginFail = false;
 
-        if (kDebugMode) {
-          debugPrint("true");
-        }
         // Uses API library to store token
         api.storeToken(parsed['access_token']);
-
-        // Uses the API library to store the login info if the user wants to automatically login
-        if (autologin) {
-          api.storeLoginInfo(email, password);
-        }
+        api.storeRefreshToken(parsed['refresh_token']);
+        api.storeAutoLogin(autologin);
 
         // unfocus the textfield
         FocusScope.of(context).unfocus();
@@ -227,30 +214,6 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void autoLoginCounter() {
-    // Every hour check if logged in and then refresh bearer token
-    Timer.periodic(const Duration(seconds: 3600), (timer) async {
-      setState(() {
-        autoLoginCheck();
-      });
-    });
-  }
-
-  autoLoginCheck() async {
-    // Check if the users data is stored and if so, log them in
-    if (await api.isLoggedIn(autoLogin: true)) {
-      // Logs the user in
-      if (await api.autoLogin()) {
-        if (mounted) {
-          // Start the auto login refresh token timer
-          autoLoginCounter();
-          // Navigate to the home screen
-          Navigator.pushNamed(context, '/home');
-        }
-      }
-    }
-  }
-
   checkIfAllGood() {
     if (passwordEntered && emailEntered) {
       setState(() {
@@ -260,9 +223,6 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         allPassed = false;
       });
-    }
-    if (kDebugMode) {
-      debugPrint(allPassed.toString());
     }
   }
 }

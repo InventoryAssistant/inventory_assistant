@@ -1,11 +1,24 @@
+import 'package:flutter/foundation.dart';
+
 const String ipAddress = '10.130.56.51';
+const String devIpAddress = '127.0.0.1:8000';
 
 getApiBaseUrl() {
-  return "http://$ipAddress/api";
+  // If debug mode is active, use the dev path.
+  if (kDebugMode) {
+    return "http://$devIpAddress/api";
+  } else {
+    return "http://$ipAddress/api";
+  }
 }
 
 getBaseUrl() {
-  return "http://$ipAddress";
+  // If debug mode is active, use the dev path.
+  if (kDebugMode) {
+    return "http://$devIpAddress";
+  } else {
+    return "http://$ipAddress";
+  }
 }
 
 getApiBase() {
