@@ -93,5 +93,13 @@ class ThemeClass {
       bodyMedium: TextStyle(color: Colors.white),
       bodySmall: TextStyle(color: Colors.white),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+    ),
   );
 }
