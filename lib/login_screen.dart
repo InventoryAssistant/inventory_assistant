@@ -17,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode passwordFocusNode = FocusNode();
   late Timer timer;
   bool autologin = false;
-  bool loginFail = true;
+  bool loginFail = false;
   bool passwordEntered = false;
   bool emailEntered = false;
   bool allPassed = false;
@@ -175,20 +175,28 @@ class _LoginScreenState extends State<LoginScreen> {
   _login(email, password) async {
     // Uses the API library to login
     final bool loggedin = await api.login(email, password, autologin);
-    // If the response contains an access token and refresh token, the login was successful
+
+    // If the log in was a success then navigate to the home screen
     if (loggedin) {
-      loginFail = false;
+      setState(() {
+        loginFail = false;
+      });
 
       // unfocus the textfield
       emailFocusNode.unfocus();
       passwordFocusNode.unfocus();
+
       // Navigate to the home screen
       debugPrint("Login successful");
       _goHome();
     } else {
       // Clear password, fail login and display error message
       passwordController.clear();
-      loginFail = true;
+
+      // Fail the login to get error message
+      setState(() {
+        loginFail = true;
+      });
 
       // unfocus the textfield
       emailFocusNode.unfocus();
