@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 class LoginScreen extends StatefulWidget {
@@ -15,10 +13,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  FocusNode passwordFocusNode = FocusNode();
   late Timer timer;
-  String errorMessage = "";
   bool autologin = false;
-  bool loginFail = false;
+  bool loginFail = true;
   bool passwordEntered = false;
   bool emailEntered = false;
   bool allPassed = false;
@@ -75,11 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         TextField(
+            focusNode: emailFocusNode,
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: "E-mail",
-              errorText: loginFail ? errorMessage : null,
+              errorText: loginFail ? 'Login information is invalid' : null,
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               enabledBorder: OutlineInputBorder(
@@ -101,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 20,
         ),
         TextField(
+            focusNode: passwordFocusNode,
             controller: passwordController,
             obscureText: true,
             decoration: InputDecoration(
@@ -171,47 +172,33 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _login(email, password) {
+  _login(email, password) async {
     // Uses the API library to login
-    api.login(email, password).then((response) {
-      Map<String, dynamic> parsed = jsonDecode(response.body);
+    final bool loggedin = await api.login(email, password, autologin);
+    // If the response contains an access token and refresh token, the login was successful
+    if (loggedin) {
+      loginFail = false;
 
-      if (kDebugMode) {
-        debugPrint(response.body);
-      }
-
-      // If the response contains an access token and refresh token, the login was successful
-      if (parsed['access_token'] != null && parsed['refresh_token'] != null) {
-        loginFail = false;
-
-        // Uses API library to store token
-        api.storeToken(parsed['access_token']);
-        api.storeRefreshToken(parsed['refresh_token']);
-        api.storeAutoLogin(autologin);
-
-        // unfocus the textfield
-        FocusScope.of(context).unfocus();
-
-        // Navigate to the home screen
-        Navigator.pushNamed(context, '/home');
-      } else {
-        // Clear password, fail login and display error message
-        passwordController.clear();
-        loginFail = true;
-        errorMessage = parsed['message'];
-
-        // unfocus the textfield
-        FocusScope.of(context).unfocus();
-      }
-    }).onError((error, stackTrace) {
+      // unfocus the textfield
+      emailFocusNode.unfocus();
+      passwordFocusNode.unfocus();
+      // Navigate to the home screen
+      debugPrint("Login successful");
+      _goHome();
+    } else {
       // Clear password, fail login and display error message
       passwordController.clear();
       loginFail = true;
-      errorMessage = "Login information is invalid";
 
       // unfocus the textfield
-      FocusScope.of(context).unfocus();
-    });
+      emailFocusNode.unfocus();
+      passwordFocusNode.unfocus();
+    }
+  }
+
+  void _goHome() {
+    debugPrint("Navigating to home screen");
+    Navigator.pushNamed(context, '/home');
   }
 
   checkIfAllGood() {

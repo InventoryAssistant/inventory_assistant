@@ -28,6 +28,14 @@ class ThemeClass {
       bodyMedium: TextStyle(color: Colors.black),
       bodySmall: TextStyle(color: Colors.black),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith(

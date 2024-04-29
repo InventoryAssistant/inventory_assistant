@@ -44,8 +44,7 @@ class Home extends StatelessWidget {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: () =>
-                              Navigator.pushNamed(context, '/login'),
+                          onPressed: () => Navigator.pushNamed(context, '/'),
                           child: const Text("Go to Login Screen"),
                         ),
                       ),
