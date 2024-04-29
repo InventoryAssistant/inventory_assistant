@@ -64,6 +64,11 @@ class _ScannerPageState extends State<ScannerPage> {
                     title: const Text('Name'),
                     subtitle: Text(product['name']),
                   ),
+                if (product['content'] != null)
+                  ListTile(
+                    title: const Text('Content'),
+                    subtitle: Text(product['content'].toString()),
+                  ),
                 if (product['category'] != null)
                   ListTile(
                     title: const Text('Category'),
@@ -96,6 +101,7 @@ class _ScannerPageState extends State<ScannerPage> {
         if (json.containsKey("data")) {
           setState(() {
             product['name'] = jsonDecode(response.body)['data']['name'];
+            product['content'] = "${jsonDecode(response.body)['data']['content']} ${jsonDecode(response.body)['data']['unit']??''}";
             product['category'] = jsonDecode(response.body)['data']['category'];
           });
         }
@@ -104,7 +110,7 @@ class _ScannerPageState extends State<ScannerPage> {
         if (json.containsKey("instore")) {
           setState(() {
             product['name'] = "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
-            product['category'] = "None";
+            product['content'] = "${jsonDecode(response.body)['instore']['contents']} ${jsonDecode(response.body)['instore']['contentsUnit']}";            product['category'] = "None";
           });
         }
 
