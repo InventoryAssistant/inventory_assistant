@@ -36,7 +36,7 @@ class ScannerPage extends StatefulWidget {
 class _ScannerPageState extends State<ScannerPage> {
   ScanResult? scanResult;
 
-  Map<String, dynamic> product = {'name': null, 'category': null};
+  Map<String, dynamic> product = {};
 
   @override
   void initState() {
