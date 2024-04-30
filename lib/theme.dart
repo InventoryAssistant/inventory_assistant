@@ -55,9 +55,6 @@ class ThemeClass {
             return Colors.black;
           },
         ),
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, double.infinity),
-        ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),

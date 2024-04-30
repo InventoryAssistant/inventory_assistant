@@ -34,6 +34,7 @@ class _ScannerPageState extends State<ScannerPage> {
             label: const Text('Scan Product'),
           ),
           Card(
+            margin: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
               children: <Widget>[
                 if (product['name'] != null)
