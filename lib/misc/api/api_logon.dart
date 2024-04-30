@@ -39,11 +39,13 @@ Future<String> getToken() async {
 }
 
 /// Check if the user is logged in
-Future<bool> isAutoLogin() async {
-  bool? autoLogin = await storage.read(key: _autoLogin) == "true";
+Future<bool> isLoggedIn({bool checkAutoLogin = false}) async {
+  if (checkAutoLogin) {
+    bool? autoLogin = await storage.read(key: _autoLogin) == "true";
 
-  if (!autoLogin) {
-    return false;
+    if (!autoLogin) {
+      return false;
+    }
   }
 
   final token = await storage.read(key: "refresh_token");
@@ -53,13 +55,7 @@ Future<bool> isAutoLogin() async {
   }
 
   // Check if the token is expired
-  bool expired = await isTokenExpired(token: token);
-
-  if (expired) {
-    return false;
-  } else {
-    return true;
-  }
+  return !await isTokenExpired(token: token);
 }
 
 /// Check if the token is expired
@@ -67,7 +63,7 @@ Future<bool> isTokenExpired({
   required String token,
 }) async {
   // Uses the API library to check if the token is expired
-  return http.get(
+  return http.post(
     Uri.parse('${api.getApiBaseUrl()}/auth/validate'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +124,7 @@ Future<bool> login(
       debugPrint(response.body);
     }
 
-    // Uses API library to store token
+    // Saves teh new tokens
     await storeToken(
         parsed['access_token'], parsed['refresh_token'], autologin);
 
@@ -138,19 +134,37 @@ Future<bool> login(
   return response;
 }
 
-// TODO: Make it function like the login function
 /// Refresh token
-Future<http.Response> refreshToken() async {
+refreshToken() async {
   final String? token = await storage.read(key: _refreshToken);
 
   final String url = '${api.getApiBaseUrl()}/auth/refresh';
 
-  return http.post(
+  bool response = await http.post(
     Uri.parse(url),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     },
-  );
+  ).then((response) async {
+    if (response.statusCode != 200) {
+      return false;
+    }
+    Map<String, dynamic> parsed = jsonDecode(response.body);
+
+    if (kDebugMode) {
+      debugPrint(response.body);
+    }
+
+    final autologin = await storage.read(key: _autoLogin) == "true";
+
+    // Saves the new token
+    await storeToken(
+        parsed['access_token'], parsed['refresh_token'], autologin);
+
+    return true;
+  });
+
+  return response;
 }

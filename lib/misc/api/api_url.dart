@@ -6,7 +6,7 @@ const String devIpAddress = '127.0.0.1:8000';
 getApiBaseUrl() {
   // If debug mode is active, use the dev path.
   if (kDebugMode) {
-    return "http://$devIpAddress/api";
+    return "http://$ipAddress/api";
   } else {
     return "http://$ipAddress/api";
   }
@@ -15,7 +15,7 @@ getApiBaseUrl() {
 getBaseUrl() {
   // If debug mode is active, use the dev path.
   if (kDebugMode) {
-    return "http://$devIpAddress";
+    return "http://$ipAddress";
   } else {
     return "http://$ipAddress";
   }

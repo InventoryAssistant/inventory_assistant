@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 class LoginScreen extends StatefulWidget {
@@ -21,6 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool passwordEntered = false;
   bool emailEntered = false;
   bool allPassed = false;
+
+  @override
+  void initState() {
+    debugPrint("Login screen");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +195,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Navigate to the home screen
       debugPrint("Login successful");
-      _goHome();
+      context.goNamed("home");
+      // _goHome();
     } else {
       // Clear password, fail login and display error message
       passwordController.clear();
@@ -206,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _goHome() {
     debugPrint("Navigating to home screen");
-    Navigator.pushNamed(context, '/home');
+    context.goNamed("home");
   }
 
   checkIfAllGood() {

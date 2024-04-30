@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -44,7 +45,7 @@ class Home extends StatelessWidget {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: () => Navigator.pushNamed(context, '/'),
+                          onPressed: () => context.goNamed("login"),
                           child: const Text("Go to Login Screen"),
                         ),
                       ),
