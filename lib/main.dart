@@ -1,145 +1,101 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'package:http/http.dart' as http;
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:inventory_assistant/theme.dart';
 
-main() {
+void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Inventory Assistant',
+      title: 'Flutter Demo',
       theme: ThemeClass.lightTheme,
       darkTheme: ThemeClass.darkTheme,
-      home: const ScannerPage(title: 'Scan Product'),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class ScannerPage extends StatefulWidget {
-  const ScannerPage({super.key, required this.title});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
 
   final String title;
 
   @override
-  State<ScannerPage> createState() => _ScannerPageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _ScannerPageState extends State<ScannerPage> {
-  ScanResult? scanResult;
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
 
-  Map<String, dynamic> product = {};
-
-  @override
-  void initState() {
-    super.initState();
+  void _incrementCounter() {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final scanResult = this.scanResult;
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(title: Text(widget.title), centerTitle: true),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        children: <Widget>[
-          ElevatedButton.icon(
-            onPressed: _scan,
-            icon: const Icon(Icons.camera),
-            label: const Text('Scan Product'),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                if (product['name'] != null)
-                  ListTile(
-                    title: const Text('Name'),
-                    subtitle: Text(product['name']),
-                  ),
-                if (product['content'] != null)
-                  ListTile(
-                    title: const Text('Content'),
-                    subtitle: Text(product['content'].toString()),
-                  ),
-                if (product['category'] != null)
-                  ListTile(
-                    title: const Text('Category'),
-                    subtitle: Text(product['category']),
-                  ),
-                if (scanResult != null)
-                  ListTile(
-                    title: const Text('Barcode'),
-                    subtitle: Text(scanResult.rawContent),
-                  ),
-              ],
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          //
+          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+          // action in the IDE, or press "p" in the console), to see the
+          // wireframe for each widget.
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
             ),
-          ),
-        ],
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
-  }
-
-  Future<void> fetchData() async {
-    final scanResult = this.scanResult;
-    try {
-      String? results = scanResult?.rawContent;
-      var url = Uri.parse('http://10.130.56.51/api/products/barcode/$results');
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-
-        // If the response is data it is from the local database
-        if (json.containsKey("data")) {
-          setState(() {
-            product['name'] = jsonDecode(response.body)['data']['name'];
-            product['content'] = "${jsonDecode(response.body)['data']['content']} ${jsonDecode(response.body)['data']['unit']??''}";
-            product['category'] = jsonDecode(response.body)['data']['category'];
-          });
-        }
-
-        // If the response is instore it is from the backup database
-        if (json.containsKey("instore")) {
-          setState(() {
-            product['name'] = "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
-            product['content'] = "${jsonDecode(response.body)['instore']['contents']} ${jsonDecode(response.body)['instore']['contentsUnit']}";            product['category'] = "None";
-          });
-        }
-
-        log(jsonEncode(product));
-      } else {
-        // Handle error response
-        log('Request failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Handle any exceptions that occur
-      log('Error: $e');
-    }
-  }
-
-  Future<void> _scan() async {
-    try {
-      final result = await BarcodeScanner.scan(
-        options: const ScanOptions(),
-      );
-      setState(() => scanResult = result);
-      fetchData();
-    } on PlatformException catch (e) {
-      setState(() {
-        scanResult = ScanResult(
-          rawContent: e.code == BarcodeScanner.cameraAccessDenied
-              ? 'The user did not grant the camera permission!'
-              : 'Unknown error: $e',
-        );
-      });
-    }
   }
 }
