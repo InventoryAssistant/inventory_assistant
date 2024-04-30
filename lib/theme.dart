@@ -29,6 +29,42 @@ class ThemeClass {
       bodyMedium: TextStyle(color: Colors.black),
       bodySmall: TextStyle(color: Colors.black),
     ),
+    inputDecorationTheme: const InputDecorationTheme(
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith(
+          (states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Colors.blueGrey[100];
+            }
+            return Colors.lightBlue;
+          },
+        ),
+        foregroundColor: MaterialStateColor.resolveWith(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Colors.grey;
+            }
+            return Colors.black;
+          },
+        ),
+        minimumSize: MaterialStateProperty.all(
+          const Size(double.infinity, double.infinity),
+        ),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+        ),
+      ),
+    ),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -57,6 +93,14 @@ class ThemeClass {
       bodyLarge: TextStyle(color: Colors.white),
       bodyMedium: TextStyle(color: Colors.white),
       bodySmall: TextStyle(color: Colors.white),
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red),
+      ),
     ),
   );
 }
