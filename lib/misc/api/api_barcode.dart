@@ -5,11 +5,11 @@ import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
-Future<Map<String, dynamic>> fetchData(ScanResult? scanResult) async {
+Future<Map<String, dynamic>> fetchBarcodeData(ScanResult? scanResult) async {
   Map<String, dynamic> product = {};
 
   try {
-    http.get(
+    await http.get(
       Uri.parse('${api.getApiBaseUrl()}/products/barcode/${scanResult?.rawContent}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -35,6 +35,7 @@ Future<Map<String, dynamic>> fetchData(ScanResult? scanResult) async {
       }else{
         // Handle error response
         product['status_code'] = 'Request failed with status: ${response.statusCode}';
+        product['message'] = jsonDecode(response.body)['message'];
         if (kDebugMode) {
           log('Request failed with status: ${response.statusCode}');
         }

@@ -56,10 +56,9 @@ class _ScannerPageState extends State<ScannerPage> {
                     title: const Text('Barcode'),
                     subtitle: Text(scanResult.rawContent),
                   ),
-                if (product['status_code'] != null)
+                if (product['message'] != null)
                   ListTile(
-                    title: const Text('Error'),
-                    subtitle: Text(product['status_code']),
+                    title: Text(product['message']),
                   ),
                 if (product['error'] != null)
                   ListTile(
@@ -73,54 +72,12 @@ class _ScannerPageState extends State<ScannerPage> {
     );
   }
 
-  /*
-  Future<void> fetchData() async {
-    final scanResult = this.scanResult;
-    try {
-      String? results = scanResult?.rawContent;
-      var url = Uri.parse('http://10.130.56.51/api/products/barcode/$results');
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-
-        // If the response is wrapped in data it is from inventory assistants database
-        if (json.containsKey("data")) {
-          setState(() {
-            product['name'] = jsonDecode(response.body)['data']['name'];
-            product['content'] = "${jsonDecode(response.body)['data']['content']} ${jsonDecode(response.body)['data']['unit']??''}";
-            product['category'] = jsonDecode(response.body)['data']['category'];
-          });
-        }
-
-        // If the response is wrapped in instore it is from the sailing groups database
-        if (json.containsKey("instore")) {
-          setState(() {
-            product['name'] = "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
-            product['content'] = "${jsonDecode(response.body)['instore']['contents']} ${jsonDecode(response.body)['instore']['contentsUnit']}";
-            product['category'] = "None";
-          });
-        }
-
-      } else {
-        // Handle error response
-        log('Request failed with status: ${response.statusCode}');
-      }
-    } catch (e) {
-      // Handle any exceptions that occur
-      if (kDebugMode) {
-        log('Error: $e');
-      }
-    }
-  }
-   */
-
   Future<void> _scan() async {
     try {
       await BarcodeScanner.scan(
         options: const ScanOptions(),
       ).then((barcode) async {
-        var data = await api.fetchData(barcode);
+        var data = await api.fetchBarcodeData(barcode);
         setState(() {
           scanResult = barcode;
           product = data;
