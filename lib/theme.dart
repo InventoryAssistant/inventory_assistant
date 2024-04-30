@@ -6,6 +6,7 @@ class ThemeClass {
     colorScheme: const ColorScheme.light().copyWith(
       primary: Colors.lightBlue,
       background: Colors.white,
+      surface: const Color.fromRGBO(230, 242, 255, 1.0),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.lightBlue,
@@ -53,9 +54,6 @@ class ThemeClass {
             }
             return Colors.black;
           },
-        ),
-        minimumSize: MaterialStateProperty.all(
-          const Size(double.infinity, double.infinity),
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
