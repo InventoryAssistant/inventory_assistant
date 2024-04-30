@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ScannerPage extends StatefulWidget {
-  const ScannerPage({super.key, required this.title});
-
-  final String title;
+  const ScannerPage({super.key});
 
   @override
   State<ScannerPage> createState() => _ScannerPageState();
@@ -29,7 +28,7 @@ class _ScannerPageState extends State<ScannerPage> {
   Widget build(BuildContext context) {
     final scanResult = this.scanResult;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title), centerTitle: true),
+      appBar: AppBar(title: const Text("Barcode Scanner"), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         children: <Widget>[
@@ -61,6 +60,15 @@ class _ScannerPageState extends State<ScannerPage> {
                     title: const Text('Barcode'),
                     subtitle: Text(scanResult.rawContent),
                   ),
+                if (product['status_code'] != null)
+                  ListTile(
+                    title: const Text('Error'),
+                    subtitle: Text(product['status_code']),
+                  ),
+                if (product['error'] != null)
+                  ListTile(
+                    title: Text(product['error']),
+                  ),
               ],
             ),
           ),
@@ -69,6 +77,7 @@ class _ScannerPageState extends State<ScannerPage> {
     );
   }
 
+  /*
   Future<void> fetchData() async {
     final scanResult = this.scanResult;
     try {
@@ -108,14 +117,19 @@ class _ScannerPageState extends State<ScannerPage> {
       }
     }
   }
+   */
 
   Future<void> _scan() async {
     try {
-      final result = await BarcodeScanner.scan(
+      await BarcodeScanner.scan(
         options: const ScanOptions(),
-      );
-      setState(() => scanResult = result);
-      fetchData();
+      ).then((barcode) async {
+        var data = await api.fetchData(barcode);
+        setState(() {
+          scanResult = barcode;
+          product = data;
+        });
+      });
     } on PlatformException catch (e) {
       setState(() {
         scanResult = ScanResult(
