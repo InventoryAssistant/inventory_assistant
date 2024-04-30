@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
