@@ -3,52 +3,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'api_url.dart' as api;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-// Create the storage
-const storage = FlutterSecureStorage();
-
-const String _refreshToken = "refresh_token";
-const String _accessToken = "access_token";
-const String _autoLogin = "auto_login";
-
-/// Store API token
-_storeToken(String value) async {
-  await storage.write(key: _accessToken, value: value);
-}
-
-_storeRefreshToken(String value) async {
-  await storage.write(key: _refreshToken, value: value);
-}
-
-_storeAutoLogin(bool value) async {
-  await storage.write(key: _autoLogin, value: value.toString());
-}
-
-/// Stores the user information
-storeToken(String accessToken, String refreshToken, bool autoLogin) async {
-  await _storeToken(accessToken);
-  await _storeRefreshToken(refreshToken);
-  await _storeAutoLogin(autoLogin);
-}
-
-/// Get token from storage
-Future<String> getToken() async {
-  String? value = await storage.read(key: _accessToken) ?? "no token";
-  return Future.value(value);
-}
+import 'api_token.dart' as api_token;
 
 /// Check if the user is logged in
 Future<bool> isLoggedIn({bool checkAutoLogin = false}) async {
   if (checkAutoLogin) {
-    bool? autoLogin = await storage.read(key: _autoLogin) == "true";
+    bool autoLogin = await api_token.getAutoLogin();
 
     if (!autoLogin) {
       return false;
     }
   }
 
-  final token = await storage.read(key: "refresh_token");
+  final token = await api_token.getRefreshToken();
 
   if (token == null) {
     return false;
@@ -80,7 +47,7 @@ Future<bool> isTokenExpired({
 
 /// Log user out
 Future logOut() async {
-  final token = await storage.read(key: _accessToken);
+  final token = await api_token.getToken();
   await http.post(
     Uri.parse('${api.getApiBaseUrl()}/auth/logout'),
     headers: <String, String>{
@@ -89,9 +56,7 @@ Future logOut() async {
       'Authorization': 'Bearer $token',
     },
   );
-  await storage.delete(key: _accessToken);
-  await storage.delete(key: _refreshToken);
-  await storage.delete(key: _autoLogin);
+  await api_token.clearToken();
 }
 
 /// Log user in
@@ -125,7 +90,7 @@ Future<bool> login(
     }
 
     // Saves teh new tokens
-    await storeToken(
+    await api_token.storeToken(
         parsed['access_token'], parsed['refresh_token'], autologin);
 
     return true;
@@ -136,7 +101,7 @@ Future<bool> login(
 
 /// Refresh token
 refreshToken() async {
-  final String? token = await storage.read(key: _refreshToken);
+  final String? token = await api_token.getRefreshToken();
 
   final String url = '${api.getApiBaseUrl()}/auth/refresh';
 
@@ -157,12 +122,10 @@ refreshToken() async {
       debugPrint(response.body);
     }
 
-    final autologin = await storage.read(key: _autoLogin) == "true";
+    final autologin = await api_token.getAutoLogin();
 
     // Saves the new token
-    await storeToken(
-        parsed['access_token'], parsed['refresh_token'], autologin);
-
+    await api_token.storeToken(parsed['access_token'], token!, autologin);
     return true;
   });
 

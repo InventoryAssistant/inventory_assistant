@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inventory_assistant/widget/custom_appbar.dart';
+import 'package:inventory_assistant/widget/custom_drawer.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -7,6 +9,10 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: 'inventory page',
+      ),
+      drawer: const CustomDrawer(),
       body: SizedBox(
         child: Row(
           children: [
