@@ -81,6 +81,8 @@ class CustomDrawerState extends State<CustomDrawer> {
                 Scaffold.of(context).closeDrawer();
                 // Call api log out function
                 await api.logOut();
+                // Go to login page
+                context.goNamed('login');
               },
             ),
           ],
