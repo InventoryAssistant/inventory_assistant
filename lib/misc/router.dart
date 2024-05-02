@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inventory_assistant/main_screen.dart';
-import 'package:inventory_assistant/login_screen.dart';
 import 'package:inventory_assistant/home.dart';
+import 'package:inventory_assistant/pages/main_page.dart';
+import 'package:inventory_assistant/pages/login_page.dart';
+import 'package:inventory_assistant/pages/scanner_page.dart';
 
 GoRouter routerGenerator() {
   final router = GoRouter(
@@ -10,22 +11,41 @@ GoRouter routerGenerator() {
       GoRoute(
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
-          return const MainScreen();
+          return const MainPage();
         },
         routes: <RouteBase>[
           GoRoute(
             name: 'login',
             path: 'login',
             builder: (BuildContext context, GoRouterState state) {
-              debugPrint("Login");
-              return const LoginScreen();
+              return const LoginPage();
             },
           ),
           GoRoute(
-            name: 'home',
-            path: 'home',
+            name: 'scanner',
+            path: 'scanner',
             builder: (BuildContext context, GoRouterState state) {
-              debugPrint("Placeholder");
+              return const ScannerPage();
+            },
+          ),
+          GoRoute(
+            name: 'inventory',
+            path: 'inventory',
+            builder: (BuildContext context, GoRouterState state) {
+              return const Home();
+            },
+          ),
+          GoRoute(
+            name: 'admin',
+            path: 'admin',
+            builder: (BuildContext context, GoRouterState state) {
+              return const Home();
+            },
+          ),
+          GoRoute(
+            name: 'profile',
+            path: 'profile',
+            builder: (BuildContext context, GoRouterState state) {
               return const Home();
             },
           ),

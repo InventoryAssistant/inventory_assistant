@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_assistant/misc/util.dart';
-import 'package:inventory_assistant/theme.dart';
+import 'package:inventory_assistant/misc/router.dart';
+import 'package:inventory_assistant/misc/theme.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 Future<void> main() async {
@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _router = Util.router;
+  final _router = routerGenerator();
 
   @override
   Widget build(BuildContext context) {

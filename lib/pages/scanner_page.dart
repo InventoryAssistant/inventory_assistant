@@ -2,6 +2,8 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:inventory_assistant/widget/custom_appbar.dart';
+import 'package:inventory_assistant/widget/custom_drawer.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({super.key});
@@ -24,7 +26,8 @@ class _ScannerPageState extends State<ScannerPage> {
   Widget build(BuildContext context) {
     final scanResult = this.scanResult;
     return Scaffold(
-      appBar: AppBar(title: const Text("Barcode Scanner"), centerTitle: true),
+      appBar: const CustomAppBar(title: "Barcode Scanner", centerTitle: true),
+      drawer: const CustomDrawer(),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         children: <Widget>[
