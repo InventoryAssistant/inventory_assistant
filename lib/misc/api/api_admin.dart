@@ -12,7 +12,8 @@ Future<bool> isAdmin() async {
   }
 
   final token = await api_token.getToken();
-  // Uses the API library to check if the token is expired
+
+  // Check if user is admin
   isAdmin = await http.get(
     Uri.parse('${api.getApiBaseUrl()}/roles/get_roles'),
     headers: <String, String>{

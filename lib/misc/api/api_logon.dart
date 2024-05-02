@@ -56,7 +56,7 @@ Future logOut() async {
       'Authorization': 'Bearer $token',
     },
   );
-  await api_token.clearToken();
+  await api_token.clearStorage();
 }
 
 /// Log user in
@@ -89,7 +89,7 @@ Future<bool> login(
       debugPrint(response.body);
     }
 
-    // Saves teh new tokens
+    // Saves the new tokens
     await api_token.storeToken(
         parsed['access_token'], parsed['refresh_token'], autologin);
 

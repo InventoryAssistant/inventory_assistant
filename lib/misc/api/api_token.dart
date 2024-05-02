@@ -8,19 +8,22 @@ const String _accessToken = "access_token";
 const String _autoLogin = "auto_login";
 const String _isAdmin = "is_admin";
 
-/// Store API token
+/// Store access API token
 _storeToken(String value) async {
   await storage.write(key: _accessToken, value: value);
 }
 
+/// Store refresh API token
 _storeRefreshToken(String value) async {
   await storage.write(key: _refreshToken, value: value);
 }
 
+/// Store wheter to auto login
 _storeAutoLogin(bool value) async {
   await storage.write(key: _autoLogin, value: value.toString());
 }
 
+/// Store wheter user is admin
 storeIsadmin(bool value) async {
   await storage.write(key: _isAdmin, value: value.toString());
 }
@@ -42,24 +45,25 @@ Future<String?> getToken() async {
   return Future.value(value);
 }
 
+/// Get refresh token from storage
 Future<String?> getRefreshToken() async {
   String? value = await storage.read(key: _refreshToken);
   return Future.value(value);
 }
 
+/// Get wheter to auto login from storage
 Future<bool> getAutoLogin() async {
   bool value = await storage.read(key: _autoLogin) == 'true';
   return value;
 }
 
+/// Get wheter user is admin from storage
 Future<bool> getIsAdmin() async {
   bool value = await storage.read(key: _isAdmin) == 'true';
   return value;
 }
 
-clearToken() async {
-  await storage.delete(key: _accessToken);
-  await storage.delete(key: _refreshToken);
-  await storage.delete(key: _autoLogin);
-  await storage.delete(key: _isAdmin);
+/// Clear all tokens from storage
+clearStorage() async {
+  await storage.deleteAll();
 }
