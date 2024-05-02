@@ -18,12 +18,12 @@ _storeRefreshToken(String value) async {
   await storage.write(key: _refreshToken, value: value);
 }
 
-/// Store wheter to auto login
+/// Store whether to auto login
 _storeAutoLogin(bool value) async {
   await storage.write(key: _autoLogin, value: value.toString());
 }
 
-/// Store wheter user is admin
+/// Store whether user is admin
 storeIsadmin(bool value) async {
   await storage.write(key: _isAdmin, value: value.toString());
 }
@@ -51,13 +51,13 @@ Future<String?> getRefreshToken() async {
   return Future.value(value);
 }
 
-/// Get wheter to auto login from storage
+/// Get whether to auto login from storage
 Future<bool> getAutoLogin() async {
   bool value = await storage.read(key: _autoLogin) == 'true';
   return value;
 }
 
-/// Get wheter user is admin from storage
+/// Get whether user is admin from storage
 Future<bool> getIsAdmin() async {
   bool value = await storage.read(key: _isAdmin) == 'true';
   return value;
