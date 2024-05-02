@@ -6,9 +6,14 @@ import 'api_token.dart' as api_token;
 
 /// Check if user is admin
 Future<bool> isAdmin() async {
+  bool isAdmin = await api_token.getIsAdmin();
+  if (isAdmin) {
+    return true;
+  }
+
   final token = await api_token.getToken();
   // Uses the API library to check if the token is expired
-  return http.post(
+  isAdmin = await http.get(
     Uri.parse('${api.getApiBaseUrl()}/roles/get_roles'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
@@ -16,11 +21,16 @@ Future<bool> isAdmin() async {
       'Authorization': 'Bearer $token',
     },
   ).then((response) {
+    if (response.statusCode != 200) {
+      return false;
+    }
     final data = jsonDecode(response.body);
-    print(data);
-    if (data.name == 'admin') {
+    if (data['name'] == 'admin') {
       return true;
     }
     return false;
   });
+  api_token.storeIsadmin(isAdmin);
+
+  return isAdmin;
 }
