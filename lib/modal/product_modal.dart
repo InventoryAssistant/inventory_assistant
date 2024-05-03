@@ -1,50 +1,47 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Modal extends StatelessWidget {
-  const Modal({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: MaterialButton(
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              height: 200,
-              color: Colors.amber,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Modal Bottom Sheet'),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Close'),
-                    )
-                  ],
-                ),
+Future addProductModal(BuildContext context, {name, category, amount}) async {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Add Product'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(hintText: 'Name'),
+            ),
+            TextField(
+              decoration: InputDecoration(hintText: 'Category'),
+            ),
+            TextField(
+              decoration: InputDecoration(hintText: 'Amount'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
               ),
-            );
-          },
-        );
-      },
-      child: const Text('Show Modal'),
-    ));
-  }
-
-  Future<void> _handleClickMe(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return const CupertinoAlertDialog(
-          title: Text('Success!'),
-          content: Text('You are in the football universe!'),
-        );
-      },
-    );
-  }
+              TextButton(
+                onPressed: () {
+                  // add the product to the database
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Add'),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
 }

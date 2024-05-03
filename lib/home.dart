@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory_assistant/modal/product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -52,31 +52,9 @@ class Home extends StatelessWidget {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Container(
-                                  height: 200,
-                                  color: Colors.amber,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        const Text('Modal Bottom Sheet'),
-                                        ElevatedButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('Close'),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
+                            addProductModal(context);
                           },
-                          child: const Text("Click Me :)"),
+                          child: const Text("Go to Login Screen"),
                         ),
                       ),
                     ),
@@ -89,19 +67,6 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> _handleClickMe(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return const CupertinoAlertDialog(
-          title: Text('Success!'),
-          content: Text('You are in the football universe!'),
-        );
-      },
     );
   }
 }
