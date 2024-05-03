@@ -47,8 +47,7 @@ Future<String?> getToken() async {
 
 /// Get refresh token from storage
 Future<String?> getRefreshToken() async {
-  String? value = await storage.read(key: _refreshToken);
-  return Future.value(value);
+  return storage.read(key: _refreshToken);
 }
 
 /// Get whether to auto login from storage

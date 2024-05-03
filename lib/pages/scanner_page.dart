@@ -40,6 +40,9 @@ class _ScannerPageState extends State<ScannerPage> {
             margin: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
               children: <Widget>[
+                const ListTile(
+                  trailing: Text("lol"),
+                ),
                 if (product['name'] != null)
                   ListTile(
                     title: const Text('Name'),
