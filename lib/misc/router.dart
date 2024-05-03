@@ -7,6 +7,7 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 GoRouter routerGenerator() {
   final router = GoRouter(
+    initialLocation: '/scanner',
     routes: <RouteBase>[
       GoRoute(
         path: '/',
@@ -14,7 +15,7 @@ GoRouter routerGenerator() {
           if (!await api.isLoggedIn()) {
             return '/login';
           }
-          return '/scanner';
+          return null;
         },
         routes: <RouteBase>[
           GoRoute(
@@ -30,24 +31,12 @@ GoRouter routerGenerator() {
             builder: (BuildContext context, GoRouterState state) {
               return const ScannerPage();
             },
-            redirect: (context, state) async {
-              if (!await api.isLoggedIn()) {
-                return '/login';
-              }
-              return null;
-            },
           ),
           GoRoute(
             name: 'inventory',
             path: 'inventory',
             builder: (BuildContext context, GoRouterState state) {
               return const Home();
-            },
-            redirect: (context, state) async {
-              if (!await api.isLoggedIn()) {
-                return '/login';
-              }
-              return null;
             },
           ),
           GoRoute(
@@ -57,7 +46,7 @@ GoRouter routerGenerator() {
               return const Home();
             },
             redirect: (context, state) async {
-              if (!await api.isLoggedIn() || !await api.isAdmin()) {
+              if (!await api.isAdmin()) {
                 return '/login';
               }
               return null;
@@ -68,12 +57,6 @@ GoRouter routerGenerator() {
             path: 'profile',
             builder: (BuildContext context, GoRouterState state) {
               return const Home();
-            },
-            redirect: (context, state) async {
-              if (!await api.isLoggedIn()) {
-                return '/login';
-              }
-              return null;
             },
           ),
         ],
