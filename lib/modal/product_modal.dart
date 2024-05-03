@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 
-Future addProductModal(BuildContext context, {name, category, amount}) async {
+Future addProductModal(
+  BuildContext context, {
+  String? name,
+  String? category,
+  double? content,
+  String? unit,
+}) async {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Add Product'),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            TextField(
-              decoration: InputDecoration(hintText: 'Name'),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Name'),
+              initialValue: name,
             ),
-            TextField(
-              decoration: InputDecoration(hintText: 'Category'),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Category'),
+              initialValue: category,
             ),
-            TextField(
-              decoration: InputDecoration(hintText: 'Amount'),
-              keyboardType: TextInputType.number,
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Content'),
+              initialValue: content?.toString(),
+            ),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Unit'),
+              initialValue: unit,
             ),
           ],
         ),

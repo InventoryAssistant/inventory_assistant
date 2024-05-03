@@ -24,7 +24,8 @@ Future<Map<String, dynamic>> fetchBarcodeData(ScanResult? scanResult) async {
         if (json.containsKey("data")) {
           product['name'] = jsonDecode(response.body)['data']['name'];
           product['content'] =
-              "${jsonDecode(response.body)['data']['content']} ${jsonDecode(response.body)['data']['unit'] ?? ''}";
+              jsonDecode(response.body)['data']['content'] ?? '';
+          product['unit'] = jsonDecode(response.body)['data']['unit'] ?? '';
 
           product['category'] = jsonDecode(response.body)['data']['category'];
         }
@@ -34,8 +35,9 @@ Future<Map<String, dynamic>> fetchBarcodeData(ScanResult? scanResult) async {
           product['name'] =
               "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
 
-          product['content'] =
-              "${jsonDecode(response.body)['instore']['contents']} ${jsonDecode(response.body)['instore']['contentsUnit']}";
+          product['content'] = jsonDecode(response.body)['instore']['contents'];
+          product['unit'] =
+              jsonDecode(response.body)['instore']['contentsUnit'];
 
           product['category'] = "None";
         }

@@ -51,7 +51,8 @@ class _ScannerPageState extends State<ScannerPage> {
                     if (product['content'] != null)
                       ListTile(
                         title: const Text('Content'),
-                        subtitle: Text(product['content'].toString()),
+                        subtitle:
+                            Text("${product['content']} ${product['unit']}"),
                       ),
                     if (product['category'] != null)
                       ListTile(
@@ -79,7 +80,13 @@ class _ScannerPageState extends State<ScannerPage> {
                   child: IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: () {
-                      addProductModal(context);
+                      addProductModal(
+                        context,
+                        name: product['name'],
+                        category: product['category'],
+                        content: product['content'],
+                        unit: product['unit'],
+                      );
                     },
                   ),
                 ),
