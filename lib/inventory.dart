@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _InventoryPageState extends State<InventoryPage> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Theme.of(context).secondaryHeaderColor,
-              border: OutlineInputBorder(
+              border: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.zero),
                 borderSide: BorderSide.none,
               ),
@@ -33,8 +34,8 @@ class _InventoryPageState extends State<InventoryPage> {
           FutureBuilder(
             future: api.fetchCategories(),
             builder: (BuildContext context,
-                AsyncSnapshot<Map<String, dynamic>> category) {
-              switch (category.connectionState) {
+                AsyncSnapshot<Map<String, dynamic>> categories) {
+              switch (categories.connectionState) {
                 case ConnectionState.waiting:
                   return const Text('Loading...');
                 default:
@@ -42,8 +43,9 @@ class _InventoryPageState extends State<InventoryPage> {
                     width: 1200,
                     height: 1200,
                     child: ListView.builder(
-                      itemCount: category.data?['data'].length,
+                      itemCount: categories.data?['data'].length,
                       itemBuilder: (BuildContext context, int index) {
+                        bool isExpanded = false;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
@@ -51,14 +53,23 @@ class _InventoryPageState extends State<InventoryPage> {
                             Card(
                               margin: const EdgeInsets.only(
                                   top: 10, left: 10, right: 10),
-                              child: ListTile(
+                              child: ExpansionTile(
                                 title: Text(
-                                  category.data?['data'][index]['name'],
+                                  categories.data?['data'][index]['name'],
                                   style: const TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                trailing: const Icon(Icons.add),
+                                onExpansionChanged: (value) {
+                                  isExpanded = value;
+                                },
+                                trailing: isExpanded
+                                    ? const Icon(Icons.remove)
+                                    : const Icon(Icons.add),
+                                children: <Widget>[
+                                  products(
+                                      categories.data?['data'][index]['id']),
+                                ],
                               ),
                             )
                           ],
@@ -71,6 +82,69 @@ class _InventoryPageState extends State<InventoryPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget products(int categoryId) {
+    return Column(
+      children: <Widget>[
+        StreamBuilder(
+          stream: api.fetchInventoryByUserLocation(categoryId),
+          builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> products) {
+            switch (products.connectionState) {
+              case ConnectionState.waiting:
+                return const Text('Loading...');
+              default:
+                return SizedBox(
+                  child: Column(
+                    children: <Widget>[
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: products.data?['data'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          bool isExpanded = false;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ListTile(
+                                title: Text(
+                                    '${products.data?['data'][index]['name']} ${products.data?['data'][index]['content']} ${products.data?['data'][index]['unit'] ?? ''}'),
+                                trailing: const Icon(Icons.edit),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10, right: 5),
+                            child: ElevatedButton(
+                              onPressed: null,
+                              child: Text('Prev'),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 10, left: 5),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                  // api.fetchPage(products.data?['links']['next']);
+                              },
+                              child: Text('Next'),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                );
+            }
+          },
+        ),
+      ],
     );
   }
 }
@@ -117,7 +191,7 @@ class _InventoryPageState extends State<InventoryPage> {
                                     ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return Text('${snapshot.error}');
+                                  reext('${snapshot.error}');
                                 } else {
                                   return const Text('Something went wrong');
                                 }
