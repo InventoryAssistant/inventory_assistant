@@ -10,7 +10,7 @@ Future addProductModal(
   double? content,
   String? unit,
 }) async {
-  // Create a text editing controller for each field
+  // All of the controllers
   final nameController = TextEditingController(text: name);
   final categoryController = TextEditingController(text: category);
   final contentController = TextEditingController(text: content?.toString());
@@ -19,13 +19,11 @@ Future addProductModal(
   final stockController = TextEditingController();
   final shelfController = TextEditingController();
 
-  // Category need to be a dropdown, same with unit
-  // Need a stock and shelf field
-
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        scrollable: true,
         title: const Text('Add Product'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -75,9 +73,31 @@ Future addProductModal(
               decoration: const InputDecoration(hintText: 'Content'),
               controller: contentController,
             ),
+            DropdownSearch(
+              asyncItems: (String filter) async {
+                final categories = await api.fetchUnits();
+                return categories;
+              },
+              onChanged: (value) {
+                debugPrint('Unit: ${value!.id}');
+                unitController.text = value.id.toString();
+              },
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Unit",
+                ),
+              ),
+              popupProps: const PopupProps.menu(
+                fit: FlexFit.loose,
+              ),
+            ),
             TextFormField(
-              decoration: const InputDecoration(hintText: 'Unit'),
-              controller: unitController,
+              decoration: const InputDecoration(hintText: 'Stock'),
+              controller: stockController,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(hintText: 'Shelf'),
+              controller: shelfController,
             ),
           ],
         ),
@@ -99,10 +119,9 @@ Future addProductModal(
                   final content =
                       double.tryParse(contentController.text) ?? 0.0;
                   final unit = unitController.text;
-                  final location = locationController.text;
-                  final stock = stockController.text;
-                  final shelf = shelfController.text;
-                  debugPrint('Location: $location');
+                  final location = int.tryParse(locationController.text) ?? 0;
+                  final stock = int.tryParse(stockController.text) ?? 0;
+                  final shelf = int.tryParse(shelfController.text) ?? 0;
 
                   await api.storeProduct(
                     name: name,
