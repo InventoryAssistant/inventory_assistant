@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:inventory_assistant/modal/product_modal.dart';
-import '../location.dart';
+import 'package:inventory_assistant/misc/location.dart';
 import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
-// Fetch user location
-Future<List<Location>> fetchLocations() async {
-  List<Location> location = [];
+/// Fetch all locations from the database
+Future<List<BaseItem>> fetchLocations() async {
+  List<BaseItem> location = [];
 
   try {
     await http.get(
@@ -21,9 +20,9 @@ Future<List<Location>> fetchLocations() async {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data'];
         for (var i = 0; i < data.length; i++) {
-          location.add(Location(
-            data[i]['id'],
-            data[i]['address'],
+          location.add(BaseItem(
+            id: data[i]['id'],
+            name: data[i]['address'],
           ));
         }
       } else {

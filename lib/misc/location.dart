@@ -1,8 +1,8 @@
-class Location {
+class BaseItem {
   final int id;
   final String name;
 
-  Location(this.id, this.name);
+  BaseItem({required this.id, required this.name});
 
   @override
   String toString() {

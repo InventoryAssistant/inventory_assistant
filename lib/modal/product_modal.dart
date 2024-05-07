@@ -16,6 +16,8 @@ Future addProductModal(
   final contentController = TextEditingController(text: content?.toString());
   final unitController = TextEditingController(text: unit);
   final locationController = TextEditingController();
+  final stockController = TextEditingController();
+  final shelfController = TextEditingController();
 
   // Category need to be a dropdown, same with unit
   // Need a stock and shelf field
@@ -51,9 +53,23 @@ Future addProductModal(
               controller: nameController,
               textCapitalization: TextCapitalization.words,
             ),
-            TextFormField(
-              decoration: const InputDecoration(hintText: 'Category'),
-              controller: categoryController,
+            DropdownSearch(
+              asyncItems: (String filter) async {
+                final categories = await api.fetchCategories();
+                return categories;
+              },
+              onChanged: (value) {
+                debugPrint('Category: ${value!.id}');
+                categoryController.text = value.id.toString();
+              },
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: "Category",
+                ),
+              ),
+              popupProps: const PopupProps.menu(
+                fit: FlexFit.loose,
+              ),
             ),
             TextFormField(
               decoration: const InputDecoration(hintText: 'Content'),
@@ -78,12 +94,14 @@ Future addProductModal(
               TextButton(
                 onPressed: () async {
                   // add the product to the database
-                  // Get the current value of each field
                   final name = nameController.text;
                   final category = categoryController.text;
-                  final content = double.tryParse(contentController.text);
+                  final content =
+                      double.tryParse(contentController.text) ?? 0.0;
                   final unit = unitController.text;
                   final location = locationController.text;
+                  final stock = stockController.text;
+                  final shelf = shelfController.text;
                   debugPrint('Location: $location');
 
                   await api.storeProduct(
@@ -91,7 +109,10 @@ Future addProductModal(
                     category: category,
                     content: content,
                     unit: unit,
-                    barCode: barCode,
+                    barCode: barCode ?? '',
+                    location: location,
+                    stock: stock,
+                    shelf: shelf,
                   );
 
                   Navigator.of(context).pop();
