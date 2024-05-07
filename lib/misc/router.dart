@@ -13,8 +13,10 @@ GoRouter routerGenerator() {
         path: '/',
         redirect: (context, state) async {
           if (!await api.isLoggedIn()) {
+            debugPrint('Redirecting to login');
             return '/login';
           }
+          debugPrint('Redirecting to scanner');
           return null;
         },
         routes: <RouteBase>[
