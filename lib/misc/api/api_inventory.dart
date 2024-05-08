@@ -89,21 +89,23 @@ Future<Map<String, dynamic>> fetchInventoryByUserLocation(categoryId) async {
     return Future.error('Error: $e');
   }
 
-  log(jsonEncode(products));
-
   return products;
 }
 
-Future<Map<String, dynamic>> fetchPage(url) async {
+Future<Map<String, dynamic>> fetchPage(url, page, categoryId) async {
   Map<String, dynamic> products = {};
 
   // Read access token from local storage
   final token = await storage.read(key: "access_token");
 
-  // try api call to get products by user location end point
+  // try api call to page end point
   try {
     await http.get(
-      Uri.parse(url),
+      Uri.parse('$url').replace(queryParameters: {
+        'page' : '$page',
+        'category_id' : '$categoryId',
+        'paginate' : '5',
+      }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -132,8 +134,6 @@ Future<Map<String, dynamic>> fetchPage(url) async {
     }
     return Future.error('Error: $e');
   }
-
-  log(jsonEncode(products));
 
   return products;
 }
