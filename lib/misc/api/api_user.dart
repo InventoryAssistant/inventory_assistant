@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:inventory_assistant/misc/location.dart';
+import 'package:inventory_assistant/misc/base_item.dart';
 import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
