@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 
@@ -37,52 +39,49 @@ class _InventoryPageState extends State<InventoryPage> {
                 case ConnectionState.waiting:
                   return const Text('Loading...');
                 default:
-                  return SizedBox(
-                    width: 1200,
-                    height: 1200,
-                    child: ListView.builder(
-                      itemCount: categories.data?['data'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return StatefulBuilder(builder: (context, setState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Card(
-                                clipBehavior: Clip.antiAlias,
-                                margin: const EdgeInsets.only(
-                                    top: 10, left: 10, right: 10),
-                                child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                      dividerColor: Colors.transparent),
-                                  child: ExpansionTile(
-                                    title: Text(
-                                      categories.data?['data'][index]['name'],
-                                      style: const TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    trailing: state[index] ?? false
-                                        ? const Icon(Icons.remove)
-                                        : const Icon(Icons.add),
-                                    onExpansionChanged: (bool value) {
-                                      setState(() {
-                                        state[index] = value;
-                                      });
-                                    },
-                                    children: <Widget>[
-                                      products(
-                                        categories.data?['data'][index]['id'],
-                                      ),
-                                    ],
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: categories.data?['data'].length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return StatefulBuilder(builder: (context, setState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Card(
+                              clipBehavior: Clip.antiAlias,
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              child: Theme(
+                                data: Theme.of(context).copyWith(
+                                    dividerColor: Colors.transparent),
+                                child: ExpansionTile(
+                                  title: Text(
+                                    categories.data?['data'][index]['name'],
+                                    style: const TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold),
                                   ),
+                                  trailing: state[index] ?? false
+                                      ? const Icon(Icons.remove)
+                                      : const Icon(Icons.add),
+                                  onExpansionChanged: (bool value) {
+                                    setState(() {
+                                      state[index] = value;
+                                    });
+                                  },
+                                  children: <Widget>[
+                                    products(
+                                      categories.data?['data'][index]['id'],
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
-                          );
-                        });
-                      },
-                    ),
+                              ),
+                            )
+                          ],
+                        );
+                      });
+                    },
                   );
               }
             },
@@ -93,11 +92,11 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
   Widget products(int categoryId) {
-    var temp = api.fetchInventoryByUserLocation(categoryId);
+    var future = api.fetchInventoryByUserLocation(categoryId);
     return StatefulBuilder(
       builder: (context, setState) {
         return FutureBuilder(
-          future: temp,
+          future: future,
           builder: (BuildContext context,
               AsyncSnapshot<Map<String, dynamic>> products) {
             switch (products.connectionState) {
@@ -131,35 +130,37 @@ class _InventoryPageState extends State<InventoryPage> {
                           Container(
                             margin: const EdgeInsets.only(bottom: 10, right: 5),
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (products.data?['links']['prev'] != null) {
-                                  setState(() {
-                                    temp = api.fetchPage(
-                                        products.data?['meta']['path'],
-                                        products.data?['meta']['current_page'] -
-                                            1,
-                                        categoryId);
-                                  });
-                                }
-                              },
-                              child: Text('Prev'),
+                              onPressed: products.data?['links']['prev'] != null
+                                  ? () {
+                                      setState(() {
+                                        future = api.fetchPage(
+                                            products.data?['meta']['path'],
+                                            products.data?['meta']
+                                                    ['current_page'] -
+                                                1,
+                                            categoryId);
+                                      });
+                                    }
+                                  : null,
+                              child: const Text('Prev'),
                             ),
                           ),
                           Container(
                             margin: const EdgeInsets.only(bottom: 10, left: 5),
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (products.data?['links']['next'] != null) {
-                                  setState(() {
-                                    temp = api.fetchPage(
-                                        products.data?['meta']['path'],
-                                        products.data?['meta']['current_page'] +
-                                            1,
-                                        categoryId);
-                                  });
-                                }
-                              },
-                              child: Text('Next'),
+                              onPressed: products.data?['links']['next'] != null
+                                  ? () {
+                                      setState(() {
+                                        future = api.fetchPage(
+                                            products.data?['meta']['path'],
+                                            products.data?['meta']
+                                                    ['current_page'] +
+                                                1,
+                                            categoryId);
+                                      });
+                                    }
+                                  : null,
+                              child: const Text('Next'),
                             ),
                           )
                         ],
