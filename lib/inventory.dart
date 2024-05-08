@@ -53,50 +53,53 @@ class _InventoryPageState extends State<InventoryPage> {
       builder: (BuildContext context,
           AsyncSnapshot<Map<String, dynamic>> categories) {
         if (categories.hasData) {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            controller: _scrollController,
-            itemCount: categories.data?['data'].length,
-            itemBuilder: (BuildContext context, int index) {
-              return StatefulBuilder(builder: (context, setState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      margin:
-                          const EdgeInsets.only(top: 10, left: 10, right: 10),
-                      child: Theme(
-                        data: Theme.of(context)
-                            .copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          title: Text(
-                            categories.data?['data'][index]['name'],
-                            style: const TextStyle(
-                                fontSize: 20.0, fontWeight: FontWeight.bold),
-                          ),
-                          trailing: state[index] ?? false
-                              ? const Icon(Icons.remove)
-                              : const Icon(Icons.add),
-                          onExpansionChanged: (bool value) {
-                            setState(() {
-                              state[index] = value;
-                            });
-                          },
-                          children: <Widget>[
-                            products(
-                              categories.data?['data'][index]['id'],
+          return Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: categories.data?['data'].length,
+              itemBuilder: (BuildContext context, int index) {
+                return StatefulBuilder(builder: (context, setState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        margin:
+                            const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                        child: Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            title: Text(
+                              categories.data?['data'][index]['name'],
+                              style: const TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.bold),
                             ),
-                          ],
+                            trailing: state[index] ?? false
+                                ? const Icon(Icons.remove)
+                                : const Icon(Icons.add),
+                            onExpansionChanged: (bool value) {
+                              setState(() {
+                                state[index] = value;
+                              });
+                            },
+                            children: <Widget>[
+                              products(
+                                categories.data?['data'][index]['id'],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  ],
-                );
-              });
-            },
+                      )
+                    ],
+                  );
+                });
+              },
+            ),
           );
         } else if (categories.hasError) {
           return Text('${categories.error}');
