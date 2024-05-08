@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/home.dart';
+import 'package:inventory_assistant/inventory.dart';
 import 'package:inventory_assistant/pages/login_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
@@ -38,7 +39,7 @@ GoRouter routerGenerator() {
             name: 'inventory',
             path: 'inventory',
             builder: (BuildContext context, GoRouterState state) {
-              return const Home();
+              return const InventoryPage();
             },
           ),
           GoRoute(
