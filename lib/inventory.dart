@@ -134,7 +134,7 @@ class _InventoryPageState extends State<InventoryPage> {
                               onPressed: products.data?['links']['prev'] != null
                                   ? () {
                                       setState(() {
-                                        future = api.fetchPage(
+                                        future = api.fetchProductPage(
                                             products.data?['meta']['path'],
                                             products.data?['meta']
                                                     ['current_page'] -
@@ -152,7 +152,7 @@ class _InventoryPageState extends State<InventoryPage> {
                               onPressed: products.data?['links']['next'] != null
                                   ? () {
                                       setState(() {
-                                        future = api.fetchPage(
+                                        future = api.fetchProductPage(
                                             products.data?['meta']['path'],
                                             products.data?['meta']
                                                     ['current_page'] +

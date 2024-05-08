@@ -91,7 +91,7 @@ Future<Map<String, dynamic>> fetchInventoryByUserLocation(categoryId) async {
   return products;
 }
 
-Future<Map<String, dynamic>> fetchPage(url, page, categoryId) async {
+Future<Map<String, dynamic>> fetchProductPage(url, page, categoryId) async {
   Map<String, dynamic> products = {};
 
   final token = await getToken();
