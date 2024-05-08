@@ -7,7 +7,6 @@ class ThemeClass {
       primary: Colors.lightBlue,
       background: Colors.white,
       surface: const Color.fromRGBO(230, 242, 255, 1.0),
-      secondary: Colors.lightBlueAccent,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.lightBlue,
