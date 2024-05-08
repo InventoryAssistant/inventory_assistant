@@ -1,47 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_assistant/home.dart';
-import 'package:inventory_assistant/inventory.dart';
-import 'package:inventory_assistant/login_screen.dart';
-import 'package:inventory_assistant/scanner.dart';
-import 'package:inventory_assistant/theme.dart';
+import 'package:go_router/go_router.dart';
+import 'package:inventory_assistant/misc/router.dart';
+import 'package:inventory_assistant/misc/theme.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await api.isLoggedIn(checkAutoLogin: true);
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final GoRouter _router = routerGenerator();
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        // Placeholder routes for navigation
-        '/home': (context) => const InventoryPage(),
-        '/login': (context) => const InventoryPage(),
-      },
+    return MaterialApp.router(
       title: 'Inventory Assistant',
       theme: ThemeClass.lightTheme,
       darkTheme: ThemeClass.darkTheme,
-      home: FutureBuilder(
-        future: api.isAutoLogin(),
-        builder: (context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data!) {
-              return const InventoryPage();
-            } else {
-              return const InventoryPage();
-            }
-          } else {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
-      ),
+      routeInformationProvider: _router.routeInformationProvider,
+      routeInformationParser: _router.routeInformationParser,
+      routerDelegate: _router.routerDelegate,
     );
   }
 }

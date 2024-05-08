@@ -10,7 +10,8 @@ Future<Map<String, dynamic>> fetchBarcodeData(ScanResult? scanResult) async {
 
   try {
     await http.get(
-      Uri.parse('${api.getApiBaseUrl()}/products/barcode/${scanResult?.rawContent}'),
+      Uri.parse(
+          '${api.getApiBaseUrl()}/products/barcode/${scanResult?.rawContent}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -22,19 +23,28 @@ Future<Map<String, dynamic>> fetchBarcodeData(ScanResult? scanResult) async {
         // If the response is wrapped in data it is from inventory assistants database
         if (json.containsKey("data")) {
           product['name'] = jsonDecode(response.body)['data']['name'];
-          product['content'] = "${jsonDecode(response.body)['data']['content']} ${jsonDecode(response.body)['data']['unit'] ?? ''}";
+          product['content'] =
+              jsonDecode(response.body)['data']['content'] ?? '';
+          product['unit'] = jsonDecode(response.body)['data']['unit'] ?? '';
+
           product['category'] = jsonDecode(response.body)['data']['category'];
         }
 
         // If the response is wrapped in instore it is from the sailing groups database
         if (json.containsKey("instore")) {
-          product['name'] = "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
-          product['content'] = "${jsonDecode(response.body)['instore']['contents']} ${jsonDecode(response.body)['instore']['contentsUnit']}";
+          product['name'] =
+              "${jsonDecode(response.body)['instore']['description']} ${jsonDecode(response.body)['instore']['name']}";
+
+          product['content'] = jsonDecode(response.body)['instore']['contents'];
+          product['unit'] =
+              jsonDecode(response.body)['instore']['contentsUnit'];
+
           product['category'] = "None";
         }
-      }else{
+      } else {
         // Handle error response
-        product['status_code'] = 'Request failed with status: ${response.statusCode}';
+        product['status_code'] =
+            'Request failed with status: ${response.statusCode}';
         product['message'] = jsonDecode(response.body)['message'];
         if (kDebugMode) {
           log('Request failed with status: ${response.statusCode}');

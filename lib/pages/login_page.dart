@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
@@ -187,7 +188,6 @@ class _LoginScreenState extends State<LoginScreen> {
       passwordFocusNode.unfocus();
 
       // Navigate to the home screen
-      debugPrint("Login successful");
       _goHome();
     } else {
       // Clear password, fail login and display error message
@@ -205,8 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _goHome() {
-    debugPrint("Navigating to home screen");
-    Navigator.pushNamed(context, '/home');
+    context.goNamed("scanner");
   }
 
   checkIfAllGood() {
