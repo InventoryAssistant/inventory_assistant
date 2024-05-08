@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'api_logon.dart';
+import 'package:inventory_assistant/misc/api/api_lib.dart';
 import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
@@ -46,8 +46,7 @@ Future<Map<String, dynamic>> fetchInventoryCategories() async {
 Future<Map<String, dynamic>> fetchInventoryByUserLocation(categoryId) async {
   Map<String, dynamic> products = {};
 
-  // Read access token from local storage
-  final token = await storage.read(key: "access_token");
+  final token = await getToken();
 
   final queryParameters = {
     'category_id': '$categoryId',
@@ -95,8 +94,7 @@ Future<Map<String, dynamic>> fetchInventoryByUserLocation(categoryId) async {
 Future<Map<String, dynamic>> fetchPage(url, page, categoryId) async {
   Map<String, dynamic> products = {};
 
-  // Read access token from local storage
-  final token = await storage.read(key: "access_token");
+  final token = await getToken();
 
   // try api call to page end point
   try {
