@@ -34,7 +34,6 @@ Future addProductModal(
                 return locations;
               },
               onChanged: (value) {
-                debugPrint('Location: ${value!.id}');
                 locationController.text = value.id.toString();
               },
               dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -57,7 +56,6 @@ Future addProductModal(
                 return categories;
               },
               onChanged: (value) {
-                debugPrint('Category: ${value!.id}');
                 categoryController.text = value.id.toString();
               },
               dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -79,7 +77,6 @@ Future addProductModal(
                 return categories;
               },
               onChanged: (value) {
-                debugPrint('Unit: ${value!.id}');
                 unitController.text = value.id.toString();
               },
               dropdownDecoratorProps: const DropDownDecoratorProps(
