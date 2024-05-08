@@ -5,7 +5,7 @@ import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
-Future<Map<String, dynamic>> fetchCategories() async {
+Future<Map<String, dynamic>> fetchInventoryCategories() async {
   Map<String, dynamic> categories = {};
 
   // Try api call to categories index end point

@@ -32,7 +32,7 @@ class _InventoryPageState extends State<InventoryPage> {
             ),
           ),
           FutureBuilder(
-            future: api.fetchCategories(),
+            future: api.fetchInventoryCategories(),
             builder: (BuildContext context,
                 AsyncSnapshot<Map<String, dynamic>> categories) {
               switch (categories.connectionState) {
