@@ -7,3 +7,4 @@ export 'api_token.dart';
 export 'api_barcode.dart';
 export 'api_product.dart';
 export 'api_user.dart';
+export 'api_location.dart';
