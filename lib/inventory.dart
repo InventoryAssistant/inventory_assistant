@@ -13,12 +13,14 @@ class InventoryPage extends StatefulWidget {
 class _InventoryPageState extends State<InventoryPage> {
   Map<int, bool> state = {};
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: "Inventory", centerTitle: true),
       drawer: const CustomDrawer(),
-      body: ListView(
+      body: Column(
         children: [
           TextField(
             decoration: InputDecoration(
@@ -32,63 +34,75 @@ class _InventoryPageState extends State<InventoryPage> {
               hintText: 'Search',
             ),
           ),
-          FutureBuilder(
-            future: api.fetchInventoryCategories(),
-            builder: (BuildContext context,
-                AsyncSnapshot<Map<String, dynamic>> categories) {
-              switch (categories.connectionState) {
-                case ConnectionState.waiting:
-                  return const Text('Loading...');
-                default:
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: categories.data?['data'].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return StatefulBuilder(builder: (context, setState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Card(
-                              clipBehavior: Clip.antiAlias,
-                              margin: const EdgeInsets.only(
-                                  top: 10, left: 10, right: 10),
-                              child: Theme(
-                                data: Theme.of(context).copyWith(
-                                    dividerColor: Colors.transparent),
-                                child: ExpansionTile(
-                                  title: Text(
-                                    categories.data?['data'][index]['name'],
-                                    style: const TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  trailing: state[index] ?? false
-                                      ? const Icon(Icons.remove)
-                                      : const Icon(Icons.add),
-                                  onExpansionChanged: (bool value) {
-                                    setState(() {
-                                      state[index] = value;
-                                    });
-                                  },
-                                  children: <Widget>[
-                                    products(
-                                      categories.data?['data'][index]['id'],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        );
-                      });
-                    },
-                  );
-              }
-            },
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                categories(),
+              ],
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget categories() {
+    return FutureBuilder(
+      future: api.fetchInventoryCategories(),
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<String, dynamic>> categories) {
+        switch (categories.connectionState) {
+          case ConnectionState.waiting:
+            return const Text('Loading...');
+          default:
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: categories.data?['data'].length,
+              itemBuilder: (BuildContext context, int index) {
+                return StatefulBuilder(builder: (context, setState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        margin:
+                            const EdgeInsets.only(top: 10, left: 10, right: 10),
+                        child: Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                            title: Text(
+                              categories.data?['data'][index]['name'],
+                              style: const TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            trailing: state[index] ?? false
+                                ? const Icon(Icons.remove)
+                                : const Icon(Icons.add),
+                            onExpansionChanged: (bool value) {
+                              setState(() {
+                                state[index] = value;
+                              });
+                            },
+                            children: <Widget>[
+                              products(
+                                categories.data?['data'][index]['id'],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                });
+              },
+            );
+        }
+      },
     );
   }
 
@@ -108,6 +122,7 @@ class _InventoryPageState extends State<InventoryPage> {
                   child: Column(
                     children: <Widget>[
                       ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: products.data?['data'].length,
                         itemBuilder: (BuildContext context, int index) {
