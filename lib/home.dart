@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:inventory_assistant/modal/product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -51,7 +51,9 @@ class Home extends StatelessWidget {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed: () => context.goNamed("login"),
+                          onPressed: () {
+                            addProductModal(context);
+                          },
                           child: const Text("Go to Login Screen"),
                         ),
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/router.dart';
 import 'package:inventory_assistant/misc/theme.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
@@ -18,7 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _router = routerGenerator();
+  final GoRouter _router = routerGenerator();
 
   @override
   Widget build(BuildContext context) {

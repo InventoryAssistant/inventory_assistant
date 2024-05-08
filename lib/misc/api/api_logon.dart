@@ -22,7 +22,9 @@ Future<bool> isLoggedIn({bool checkAutoLogin = false}) async {
   }
 
   // Check if the token is expired
-  return !await isTokenExpired(token: token);
+  bool isExpired = !await isTokenExpired(token: token);
+
+  return isExpired;
 }
 
 /// Check if the token is expired
