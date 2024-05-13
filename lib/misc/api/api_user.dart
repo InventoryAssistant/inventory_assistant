@@ -91,8 +91,8 @@ Future<bool> updateUser({
   required String lastName,
   required String email,
   required String phoneNumber,
-  required String locatioId,
-  required String password,
+  required int locatioId,
+  required String? password,
 }) async {
   final token = await api_token.getToken();
 
@@ -111,7 +111,7 @@ Future<bool> updateUser({
         'email': email,
         'phone_number': phoneNumber,
         'location_id': locatioId,
-        'password': password,
+        if (password != null) 'password': password,
       }),
     )
         .then((response) {
@@ -123,6 +123,7 @@ Future<bool> updateUser({
       } else {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
+          debugPrint('Body: ${response.body}');
         }
         return false;
       }

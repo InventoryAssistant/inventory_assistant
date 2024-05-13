@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/misc/base_item.dart';
+import 'package:inventory_assistant/modal/edit_profile_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
@@ -18,22 +19,26 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  Map<String, dynamic> user = {};
 
   Future<Map<String, dynamic>> getUserData() async {
-    Map<String, dynamic> user = {};
     user = await api.getCurrentUser();
     BaseItem location = await api.getLocationById(user['location']);
     user['location'] = location.name;
+    user['location_id'] = location.id;
     return user;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Profile',
-        trailing: Icon(
-          Icons.edit,
+        trailing: IconButton(
+          onPressed: () {
+            udpateUserModal(context, user: user);
+          },
+          icon: const Icon(Icons.edit),
         ),
       ),
       drawer: const CustomDrawer(),
