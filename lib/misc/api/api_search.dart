@@ -4,8 +4,8 @@ import 'api_url.dart' as api;
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
-Future<Map<String, dynamic>> search(query) async {
-  Map<String, dynamic> products = {};
+Future<List<dynamic>> search(query) async {
+  List<dynamic> products = [];
 
   if(query == ""){
     return Future.error("Empty query");
@@ -21,10 +21,10 @@ Future<Map<String, dynamic>> search(query) async {
     ).then((response) {
       if (response.statusCode == 200) {
         // If OK response decode response and set to categories variable
-        var json = jsonDecode(response.body);
+        var json = jsonDecode(response.body)['data'];
 
         if (kDebugMode) {
-          debugPrint(jsonEncode(response.body));
+           debugPrint(jsonEncode(jsonDecode(response.body)['data']));
         }
 
         products = json;

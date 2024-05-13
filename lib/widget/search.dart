@@ -9,49 +9,51 @@ class Search extends StatefulWidget {
   State<Search> createState() => _SearchState();
 }
 
-
 class _SearchState extends State<Search> {
-  final TextEditingController search = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    search.addListener(_printLatestValue);
-  }
-
-  @override
-  void dispose() {
-    search.dispose();
-    super.dispose();
-  }
-
-  void _printLatestValue() {
-    final text = search.text;
-
-    // Check if string is empty before making api call
-    if(text.isNotEmpty){
-
-      if (kDebugMode) {
-        debugPrint('$text (${text.characters.length})');
-      }
-
-      api.search(text);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: search,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Theme.of(context).secondaryHeaderColor,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.zero),
-          borderSide: BorderSide.none,
+    return SearchAnchor(
+        isFullScreen: false,
+        viewShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
         ),
-        hintText: 'Search',
-      ),
-    );
+        builder: (BuildContext context, SearchController controller) {
+          return SearchBar(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0),
+              ),
+            ),
+            controller: controller,
+            padding: const MaterialStatePropertyAll<EdgeInsets>(
+                EdgeInsets.symmetric(horizontal: 16.0)),
+            onTap: () {
+              controller.openView();
+            },
+            onChanged: (_) {
+              controller.openView();
+            },
+            leading: const Icon(Icons.search),
+          );
+        },
+        suggestionsBuilder:(BuildContext context, SearchController controller) async {
+          String query = controller.text;
+          List<dynamic> products = [];
+
+          if (query.isNotEmpty) {
+            products = await api.search(query);
+          }
+
+          return List<ListTile>.generate(products.length, (int index) {
+            final product = products[index];
+            return ListTile(
+              title: Text(
+                  "${product['name']} ${product['content']} ${product['unit'] ?? ''}"),
+              onTap: () {
+                // TODO: go to product page when product page is ready
+              },
+            );
+          });
+        });
   }
 }
