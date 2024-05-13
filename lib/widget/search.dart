@@ -1,3 +1,5 @@
+import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
@@ -25,7 +27,16 @@ class _SearchState extends State<Search> {
 
   void _printLatestValue() {
     final text = search.text;
-    print('$text (${text.characters.length})');
+
+    // Check if string is empty before making api call
+    if(text.isNotEmpty){
+
+      if (kDebugMode) {
+        debugPrint('$text (${text.characters.length})');
+      }
+
+      api.search(text);
+    }
   }
 
   @override
