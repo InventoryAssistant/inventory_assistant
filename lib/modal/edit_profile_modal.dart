@@ -20,9 +20,10 @@ setUserData(Map<String, dynamic> user) {
   passwordController.text = '';
 }
 
-udpateUserModal(
+Future editProfileModal(
   BuildContext context, {
   required Map<String, dynamic> user,
+  Function? callback,
 }) {
   setUserData(user);
 
@@ -134,6 +135,9 @@ udpateUserModal(
                             content: Text('User updated successfully'),
                           ),
                         );
+                        if (callback != null) {
+                          callback();
+                        }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

@@ -23,6 +23,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return user;
   }
 
+  updateData() {
+    getUserData().then((data) {
+      setState(() {
+        user = data;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: 'Profile',
         trailing: IconButton(
           onPressed: () {
-            udpateUserModal(context, user: user);
+            editProfileModal(context, user: user, callback: updateData);
           },
           icon: const Icon(Icons.edit),
         ),
