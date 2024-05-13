@@ -148,6 +148,7 @@ Future editProfileModal(
                       }
                     },
                   );
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Update'),
               ),
