@@ -121,12 +121,12 @@ class _AdminPageState extends State<AdminPage> {
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                          "Telefon nummer: ${users.data?[index]['phone_number']}"),
+                                          "Number: ${users.data?[index]['phone_number']}"),
                                     ),
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                          "Lokation: ${users.data?[index]['location']}"),
+                                          "Location: ${users.data?[index]['location']}"),
                                     ),
                                   ],
                                 ),
