@@ -12,7 +12,6 @@ class ProductPage extends StatefulWidget {
 }
 
 class ProductPageState extends State<ProductPage> {
-  Map<String, dynamic> product = {};
   bool canEdit = false;
 
   @override
@@ -28,9 +27,8 @@ class ProductPageState extends State<ProductPage> {
     super.initState();
   }
 
-  getProduct() async {
-    product = await api.fetchProduct(widget.id!);
-    debugPrint('Product: $product');
+  Future<Map<String, dynamic>> getProduct() async {
+    final Map<String, dynamic> product = await api.fetchProduct(widget.id!);
     return product;
   }
 
@@ -38,8 +36,11 @@ class ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getProduct(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+      builder: (BuildContext context,
+          AsyncSnapshot<Map<String, dynamic>> productData) {
+        final Map<String, dynamic> product = productData.data ?? {};
+        if (productData.connectionState == ConnectionState.done &&
+            product['error'] == null) {
           return Scaffold(
             appBar: CustomAppBar(
               title: '${product['name']}',
@@ -115,6 +116,22 @@ class ProductPageState extends State<ProductPage> {
                   ),
                 )
               ],
+            ),
+          );
+        } else if (product['error'] != null) {
+          return Scaffold(
+            appBar: const CustomAppBar(
+              title: 'Error',
+            ),
+            drawer: const CustomDrawer(),
+            body: Center(
+              child: Text(
+                '${product['error']}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           );
         } else {

@@ -128,7 +128,7 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
 
   try {
     await http.get(
-      Uri.parse('${api.getApiBaseUrl()}/products/$id'),
+      Uri.parse('${api.getApiBaseUrl()}/sproducts/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -150,6 +150,7 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
     // Handle any exceptions that occur
     if (kDebugMode) {
       debugPrint('Error: $e');
+      return {'error': 'Something went wrong, try again later.'};
     }
   }
 
