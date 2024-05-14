@@ -44,6 +44,7 @@ class ProductPageState extends State<ProductPage> {
           return Scaffold(
             appBar: CustomAppBar(
               title: '${product['name']}',
+              centerTitle: true,
               trailing: canEdit
                   ? IconButton(
                       icon: const Icon(Icons.edit),
@@ -65,12 +66,17 @@ class ProductPageState extends State<ProductPage> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'Details:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Details:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Padding(
@@ -95,16 +101,22 @@ class ProductPageState extends State<ProductPage> {
                   child: Card(
                     child: Column(
                       children: [
-                        const ListTile(
-                          title: Text(
-                            'Locations:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Locations:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        ListView.builder(
+                        ListView.separated(
                           shrinkWrap: true,
                           itemCount: product['locations'].length,
                           itemBuilder: (BuildContext context, int index) {
@@ -115,6 +127,12 @@ class ProductPageState extends State<ProductPage> {
                                       fontWeight: FontWeight.bold)),
                               subtitle: Text(
                                   'Stock: ${product['locations'][index]['pivot']['stock']} Shelf: ${product['locations'][index]['pivot']['shelf_amount']}'),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Divider(),
                             );
                           },
                         ),
