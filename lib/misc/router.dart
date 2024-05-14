@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inventory_assistant/home.dart';
+import 'package:inventory_assistant/inventory.dart';
+import 'package:inventory_assistant/pages/admin_page.dart';
 import 'package:inventory_assistant/pages/login_page.dart';
 import 'package:inventory_assistant/pages/profile_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
@@ -37,14 +38,14 @@ GoRouter routerGenerator() {
             name: 'inventory',
             path: 'inventory',
             builder: (BuildContext context, GoRouterState state) {
-              return const Home();
+              return const InventoryPage();
             },
           ),
           GoRoute(
             name: 'admin',
             path: 'admin',
             builder: (BuildContext context, GoRouterState state) {
-              return const Home();
+              return const AdminPage();
             },
             redirect: (context, state) async {
               if (!await api.isAdmin()) {

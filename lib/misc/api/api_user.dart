@@ -3,8 +3,47 @@ import 'package:http/http.dart' as http;
 import 'package:inventory_assistant/misc/base_item.dart';
 import 'package:inventory_assistant/misc/api/api_url.dart' as api;
 import 'package:inventory_assistant/misc/api/api_token.dart' as api_token;
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
+
+/// Fetch all users by location
+Future<List<dynamic>> fetchUsersByLocation(location) async {
+  List<dynamic> users = [];
+
+  final token = await api_token.getToken();
+
+  try {
+    await http.get(
+      Uri.parse('${api.getApiBaseUrl()}/users/location/$location'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then((response) {
+      if (response.statusCode == 200) {
+        // If OK response decode response and set to categories variable
+        users = jsonDecode(response.body)['data'];
+      } else {
+        // Handle error response
+        if (kDebugMode) {
+          debugPrint('Request failed with status: ${response.statusCode}');
+          debugPrint(
+              'Request failed with message: ${jsonDecode(response.body)['message']}');
+        }
+        return Future.error(
+            "Request failed with status: ${response.statusCode} and message: ${jsonDecode(response.body)['message']}");
+      }
+    });
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint("Error: $e");
+    }
+    return Future.error('Error: $e');
+  }
+
+  return users;
+}
 
 /// Fetch all locations from the database
 Future<List<BaseItem>> fetchLocations() async {
@@ -29,7 +68,6 @@ Future<List<BaseItem>> fetchLocations() async {
       } else {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          log('Request failed with status: ${response.statusCode}');
         }
       }
     });
@@ -37,7 +75,6 @@ Future<List<BaseItem>> fetchLocations() async {
     // Handle any exceptions that occur
     if (kDebugMode) {
       debugPrint('Error: $e');
-      log('Error: $e');
     }
   }
 
