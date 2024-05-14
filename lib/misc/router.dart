@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inventory_assistant/home.dart';
 import 'package:inventory_assistant/inventory.dart';
 import 'package:inventory_assistant/pages/admin_page.dart';
 import 'package:inventory_assistant/pages/login_page.dart';
+import 'package:inventory_assistant/pages/profile_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
@@ -15,10 +15,8 @@ GoRouter routerGenerator() {
         path: '/',
         redirect: (context, state) async {
           if (!await api.isLoggedIn()) {
-            debugPrint('Redirecting to login');
             return '/login';
           }
-          debugPrint('Redirecting to scanner');
           return null;
         },
         routes: <RouteBase>[
@@ -60,7 +58,7 @@ GoRouter routerGenerator() {
             name: 'profile',
             path: 'profile',
             builder: (BuildContext context, GoRouterState state) {
-              return const Home();
+              return const ProfilePage();
             },
           ),
         ],

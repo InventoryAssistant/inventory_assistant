@@ -7,7 +7,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = false,
     this.trailing = const SizedBox(),
   });
-
   final String title;
   final bool centerTitle;
   final Widget trailing;
