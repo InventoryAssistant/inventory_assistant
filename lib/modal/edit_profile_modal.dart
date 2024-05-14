@@ -26,135 +26,203 @@ Future editProfileModal(
   Function? callback,
 }) {
   setUserData(user);
+  // Create a global key for the form
+  final _formKey = GlobalKey<FormState>();
+  bool _isFormValid = false;
 
   return showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
-        scrollable: true,
-        title: const Text('Edit profile'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'First name',
-                labelText: 'First name',
-              ),
-              controller: firstNameController,
-              keyboardType: TextInputType.name,
-              textCapitalization: TextCapitalization.words,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Last name',
-                labelText: 'Last name',
-              ),
-              controller: lastNameController,
-              keyboardType: TextInputType.name,
-              textCapitalization: TextCapitalization.words,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Mail',
-                labelText: 'Mail',
-              ),
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textCapitalization: TextCapitalization.words,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Phone number',
-                labelText: 'Phone number',
-              ),
-              controller: phoneController,
-              keyboardType: TextInputType.phone,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Password',
-                labelText: 'Password',
-              ),
-              controller: passwordController,
-              obscureText: true,
-            ),
-            DropdownSearch(
-              asyncItems: (String filter) async {
-                final locations = await api.fetchLocations();
-                return locations;
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            scrollable: true,
+            title: const Text('Edit profile'),
+            content: Form(
+              key: _formKey,
+              onChanged: () {
+                setState(() {
+                  _isFormValid = _formKey.currentState!.validate();
+                });
               },
-              onChanged: (value) {
-                locationController.text = value.id.toString();
-              },
-              dropdownDecoratorProps: const DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                  labelText: "Location",
-                ),
-              ),
-              popupProps: const PopupProps.menu(
-                fit: FlexFit.loose,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setUserData(user);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ThemeClass.darkTheme.secondaryHeaderColor,
-                  foregroundColor: ThemeClass.darkTheme.primaryColor,
-                ),
-                child: const Text('Reset'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  final password = passwordController.text.isEmpty
-                      ? null
-                      : passwordController.text;
-                  final success = api.updateUser(
-                    userId: user['id'],
-                    firstName: firstNameController.text,
-                    lastName: lastNameController.text,
-                    email: emailController.text,
-                    phoneNumber: phoneController.text,
-                    locatioId: int.parse(locationController.text),
-                    password: password,
-                  );
-
-                  success.then(
-                    (value) {
-                      if (value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('User updated successfully'),
-                          ),
-                        );
-                        if (callback != null) {
-                          callback();
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('User update failed'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'First name',
+                      labelText: 'First name',
+                      errorStyle: TextStyle(
+                        fontSize: 0,
+                      ),
+                    ),
+                    controller: firstNameController,
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
                       }
+                      return null;
                     },
-                  );
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Update'),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Last name',
+                      labelText: 'Last name',
+                      errorStyle: TextStyle(
+                        fontSize: 0,
+                      ),
+                    ),
+                    controller: lastNameController,
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Mail',
+                      labelText: 'Mail',
+                      errorStyle: TextStyle(
+                        fontSize: 0,
+                      ),
+                    ),
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Phone number',
+                      labelText: 'Phone number',
+                      errorStyle: TextStyle(
+                        fontSize: 0,
+                      ),
+                    ),
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Password',
+                      labelText: 'Password',
+                    ),
+                    controller: passwordController,
+                    obscureText: true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  DropdownSearch(
+                    asyncItems: (String filter) async {
+                      final locations = await api.fetchLocations();
+                      return locations;
+                    },
+                    onChanged: (value) {
+                      locationController.text = value.id.toString();
+                    },
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: "Location",
+                      ),
+                    ),
+                    popupProps: const PopupProps.menu(
+                      fit: FlexFit.loose,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setUserData(user);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          ThemeClass.darkTheme.secondaryHeaderColor,
+                      foregroundColor: ThemeClass.darkTheme.primaryColor,
+                    ),
+                    child: const Text('Reset'),
+                  ),
+                  ElevatedButton(
+                    onPressed: !_isFormValid
+                        ? null
+                        : () {
+                            final password = passwordController.text.isEmpty
+                                ? null
+                                : passwordController.text;
+                            final success = api.updateUser(
+                              userId: user['id'],
+                              firstName: firstNameController.text,
+                              lastName: lastNameController.text,
+                              email: emailController.text,
+                              phoneNumber: phoneController.text,
+                              locatioId: int.parse(locationController.text),
+                              password: password,
+                            );
+
+                            success.then(
+                              (value) {
+                                if (value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('User updated successfully'),
+                                    ),
+                                  );
+                                  if (callback != null) {
+                                    callback();
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('User update failed'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                            Navigator.of(context).pop();
+                          },
+                    child: const Text('Update'),
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       );
     },
   );
