@@ -54,7 +54,6 @@ class _AdminPageState extends State<AdminPage> {
         return locations;
       },
       onChanged: (value) async {
-        debugPrint('Location: ${value!.id}');
         setState(() {
           locationController.text = value.id.toString();
         });
