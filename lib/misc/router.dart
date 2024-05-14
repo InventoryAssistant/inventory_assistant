@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/home.dart';
 import 'package:inventory_assistant/inventory.dart';
-import 'package:inventory_assistant/pages/admin.dart';
 import 'package:inventory_assistant/pages/login_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
@@ -47,7 +46,7 @@ GoRouter routerGenerator() {
             name: 'admin',
             path: 'admin',
             builder: (BuildContext context, GoRouterState state) {
-              return const AdminPage();
+              return const Home();
             },
             redirect: (context, state) async {
               if (!await api.isAdmin()) {
