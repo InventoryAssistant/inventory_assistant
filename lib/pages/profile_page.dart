@@ -37,8 +37,9 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: CustomAppBar(
         title: 'Profile',
         trailing: IconButton(
-          onPressed: () {
-            editProfileModal(context, user: user, callback: updateData);
+          onPressed: () async {
+            await editProfileModal(context, user: user);
+            updateData();
           },
           icon: const Icon(Icons.edit),
         ),

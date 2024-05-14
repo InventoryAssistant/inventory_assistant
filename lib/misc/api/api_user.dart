@@ -125,9 +125,6 @@ Future<bool> updateUser({
     )
         .then((response) {
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          debugPrint('User updated');
-        }
         return true;
       } else {
         if (kDebugMode) {

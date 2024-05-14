@@ -23,7 +23,6 @@ setUserData(Map<String, dynamic> user) {
 Future editProfileModal(
   BuildContext context, {
   required Map<String, dynamic> user,
-  Function? callback,
 }) {
   setUserData(user);
   // Create a global key for the form
@@ -41,9 +40,11 @@ Future editProfileModal(
             content: Form(
               key: _formKey,
               onChanged: () {
-                setState(() {
-                  _isFormValid = _formKey.currentState!.validate();
-                });
+                if (_formKey.currentState!.mounted) {
+                  setState(() {
+                    _isFormValid = _formKey.currentState!.validate();
+                  });
+                }
               },
               child: Column(
                 children: [
@@ -178,11 +179,11 @@ Future editProfileModal(
                   ElevatedButton(
                     onPressed: !_isFormValid
                         ? null
-                        : () {
+                        : () async {
                             final password = passwordController.text.isEmpty
                                 ? null
                                 : passwordController.text;
-                            final success = api.updateUser(
+                            final response = await api.updateUser(
                               userId: user['id'],
                               firstName: firstNameController.text,
                               lastName: lastNameController.text,
@@ -192,28 +193,27 @@ Future editProfileModal(
                               password: password,
                             );
 
-                            success.then(
-                              (value) {
-                                if (value) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('User updated successfully'),
-                                    ),
-                                  );
-                                  if (callback != null) {
-                                    callback();
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('User update failed'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                }
-                              },
-                            );
+                            if (!context.mounted) {
+                              return;
+                            }
+
+                            if (response) {
+                              debugPrint('User updated successfully');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('User updated successfully'),
+                                ),
+                              );
+                            } else {
+                              debugPrint('User update failed');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('User update failed'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+
                             Navigator.of(context).pop();
                           },
                     child: const Text('Update'),
