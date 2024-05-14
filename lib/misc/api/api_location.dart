@@ -26,6 +26,7 @@ Future<BaseItem> getLocationById(int locationId) async {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
         }
+        location = BaseItem(id: 0, name: 'Falied to get location');
       }
     });
   } catch (e) {

@@ -72,6 +72,15 @@ Future getCurrentUser() async {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
         }
+
+        user = {
+          'id': 0,
+          'first_name': 'Failed to get user',
+          'last_name': '',
+          'email': '',
+          'phone': '',
+          'location': 0,
+        };
       }
     });
   } catch (e) {
