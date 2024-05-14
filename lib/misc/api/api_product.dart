@@ -140,6 +140,10 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
         }
+        product = {
+          'name': 'Product not found',
+          'locations': [],
+        };
       }
     });
   } catch (e) {
