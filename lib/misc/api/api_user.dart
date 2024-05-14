@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:inventory_assistant/misc/base_item.dart';
 import 'api_url.dart' as api;
 import 'api_token.dart' as api_token;
-import 'dart:developer';
 import 'package:flutter/foundation.dart';
 
 /// Fetch all locations from the database
@@ -29,7 +28,6 @@ Future<List<BaseItem>> fetchLocations() async {
       } else {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          log('Request failed with status: ${response.statusCode}');
         }
       }
     });
@@ -37,7 +35,6 @@ Future<List<BaseItem>> fetchLocations() async {
     // Handle any exceptions that occur
     if (kDebugMode) {
       debugPrint('Error: $e');
-      log('Error: $e');
     }
   }
 
@@ -62,18 +59,15 @@ Future<bool> hasPermission({required String permission}) async {
     if (data['has_ability'] == true) {
       return true;
     }
-
     if (response.statusCode != 200) {
       if (kDebugMode) {
         debugPrint('Request failed with status: ${response.statusCode}');
-        log('Request failed with status: ${response.statusCode}');
       }
     }
   } catch (e) {
     // Handle any exceptions that occur
     if (kDebugMode) {
       debugPrint('Error: $e');
-      log('Error: $e');
     }
   }
 
