@@ -128,7 +128,7 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
 
   try {
     await http.get(
-      Uri.parse('${api.getApiBaseUrl()}/sproducts/$id'),
+      Uri.parse('${api.getApiBaseUrl()}/products/$id'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',

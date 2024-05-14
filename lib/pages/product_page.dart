@@ -60,10 +60,12 @@ class ProductPageState extends State<ProductPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Card(
                     child: ListView(
+                      padding: const EdgeInsets.all(10.0),
                       shrinkWrap: true,
                       children: [
-                        const ListTile(
-                          title: Text(
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
                             'Details:',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -71,14 +73,17 @@ class ProductPageState extends State<ProductPage> {
                             ),
                           ),
                         ),
-                        ListTile(
-                          title: Text('Category: ${product['category']}'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                          child: Text('Category: ${product['category']}'),
                         ),
-                        ListTile(
-                          title: Text('Barcode: ${product['barcode']}'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                          child: Text('Barcode: ${product['barcode']}'),
                         ),
-                        ListTile(
-                          title: Text(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                          child: Text(
                               'Content: ${product['content']} ${product['unit']}'),
                         ),
                       ],
@@ -105,7 +110,9 @@ class ProductPageState extends State<ProductPage> {
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
                               title: Text(
-                                  '${product['locations'][index]['address']}'),
+                                  '${product['locations'][index]['address']}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                               subtitle: Text(
                                   'Stock: ${product['locations'][index]['pivot']['stock']} Shelf: ${product['locations'][index]['pivot']['shelf_amount']}'),
                             );
