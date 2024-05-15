@@ -8,14 +8,15 @@ import 'package:inventory_assistant/pages/profile_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
-GoRouter routerGenerator() {
+GoRouter routerGenerator(bool autoLogin) {
   final router = GoRouter(
     initialLocation: '/scanner',
     routes: <RouteBase>[
       GoRoute(
         path: '/',
         redirect: (context, state) async {
-          if (!await api.isLoggedIn()) {
+          if (!await api.isLoggedIn() || autoLogin) {
+            autoLogin = false;
             return '/login';
           }
           return null;
