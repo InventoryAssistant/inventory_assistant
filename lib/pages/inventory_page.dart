@@ -3,6 +3,7 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
+import 'package:inventory_assistant/widget/search.dart';
 
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
@@ -34,18 +35,7 @@ class _InventoryPageState extends State<InventoryPage> {
       drawer: const CustomDrawer(),
       body: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Theme.of(context).secondaryHeaderColor,
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.zero),
-                borderSide: BorderSide.none,
-              ),
-              labelText: 'Search',
-              hintText: 'Search',
-            ),
-          ),
+          const Search(),
           Expanded(
             child: ListView(
               shrinkWrap: true,
@@ -80,8 +70,8 @@ class _InventoryPageState extends State<InventoryPage> {
                     children: <Widget>[
                       Card(
                         clipBehavior: Clip.antiAlias,
-                        margin: const EdgeInsets.only(
-                            bottom: 10, left: 10, right: 10),
+                        margin:
+                        const EdgeInsets.only(bottom: 10, left: 10, right: 10),
                         child: Theme(
                           data: Theme.of(context)
                               .copyWith(dividerColor: Colors.transparent),
@@ -175,15 +165,15 @@ class _InventoryPageState extends State<InventoryPage> {
                           child: ElevatedButton(
                             onPressed: products.data?['links']['prev'] != null
                                 ? () {
-                                    setState(() {
-                                      future = api.fetchProductPage(
-                                          products.data?['meta']['path'],
-                                          products.data?['meta']
-                                                  ['current_page'] -
-                                              1,
-                                          categoryId);
-                                    });
-                                  }
+                              setState(() {
+                                future = api.fetchProductPage(
+                                    products.data?['meta']['path'],
+                                    products.data?['meta']
+                                    ['current_page'] -
+                                        1,
+                                    categoryId);
+                              });
+                            }
                                 : null,
                             child: const Text('Prev'),
                           ),
@@ -193,15 +183,15 @@ class _InventoryPageState extends State<InventoryPage> {
                           child: ElevatedButton(
                             onPressed: products.data?['links']['next'] != null
                                 ? () {
-                                    setState(() {
-                                      future = api.fetchProductPage(
-                                          products.data?['meta']['path'],
-                                          products.data?['meta']
-                                                  ['current_page'] +
-                                              1,
-                                          categoryId);
-                                    });
-                                  }
+                              setState(() {
+                                future = api.fetchProductPage(
+                                    products.data?['meta']['path'],
+                                    products.data?['meta']
+                                    ['current_page'] +
+                                        1,
+                                    categoryId);
+                              });
+                            }
                                 : null,
                             child: const Text('Next'),
                           ),
