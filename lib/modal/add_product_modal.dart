@@ -2,14 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
-final TextEditingController nameController = TextEditingController();
-final TextEditingController categoryController = TextEditingController();
-final TextEditingController contentController = TextEditingController();
-final TextEditingController unitController = TextEditingController();
-final TextEditingController locationController = TextEditingController();
-final TextEditingController stockController = TextEditingController();
-final TextEditingController shelfController = TextEditingController();
-
 Future addProductModal(
   BuildContext context, {
   String? barcode,
@@ -18,6 +10,15 @@ Future addProductModal(
   double? content,
   String? unit,
 }) async {
+  // All of the controllers
+  final nameController = TextEditingController(text: name);
+  final categoryController = TextEditingController(text: category);
+  final contentController = TextEditingController(text: content?.toString());
+  final unitController = TextEditingController(text: unit);
+  final locationController = TextEditingController();
+  final stockController = TextEditingController();
+  final shelfController = TextEditingController();
+
   return showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -72,8 +73,8 @@ Future addProductModal(
             ),
             DropdownSearch(
               asyncItems: (String filter) async {
-                final categories = await api.fetchUnits();
-                return categories;
+                final units = await api.fetchUnits();
+                return units;
               },
               onChanged: (value) {
                 unitController.text = value.id.toString();

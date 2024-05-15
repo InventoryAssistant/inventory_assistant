@@ -156,3 +156,85 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
 
   return product;
 }
+
+/// get unit from product
+Future<BaseItem> fetchUnitFromProduct(int id) async {
+  BaseItem unit = BaseItem(id: 0, name: '');
+
+  try {
+    await http.get(
+      Uri.parse('${api.getApiBaseUrl()}/products/$id/unit'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+    ).then((response) {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        unit = BaseItem(
+          id: data['id'],
+          name: data['name'],
+        );
+      } else {
+        if (kDebugMode) {
+          debugPrint('Request failed with status: ${response.statusCode}');
+        }
+      }
+    });
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint('Error: $e');
+    }
+  }
+
+  return unit;
+}
+
+/// Update a product in the database
+Future<bool> updateProduct({
+  required int id,
+  required String name,
+  required String categoryId,
+  required double content,
+  required String unitId,
+  required String barcode,
+  required int shelf,
+  required int stock,
+  required int locationId,
+}) async {
+  // Get the api token
+  final token = await api_token.getToken();
+
+  // Create the locations array for the request
+  final locations = [
+    {
+      'id': locationId,
+      'stock': stock,
+      'shelf_amount': shelf,
+    }
+  ];
+
+  // Send the request to the api
+  final response = await http.put(
+    Uri.parse('${api.getApiBaseUrl()}/products/$id'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: jsonEncode({
+      'name': name,
+      'category_id': categoryId,
+      'content': content,
+      'unit_id': unitId,
+      'barcode': barcode,
+      'locations': locations,
+    }),
+  );
+
+  debugPrint(response.body);
+
+  // Check if the request was successful
+  return response.statusCode == 200;
+}
