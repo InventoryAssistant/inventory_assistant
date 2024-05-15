@@ -70,8 +70,8 @@ class _InventoryPageState extends State<InventoryPage> {
                     children: <Widget>[
                       Card(
                         clipBehavior: Clip.antiAlias,
-                        margin:
-                        const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                        margin: const EdgeInsets.only(
+                            bottom: 10, left: 10, right: 10),
                         child: Theme(
                           data: Theme.of(context)
                               .copyWith(dividerColor: Colors.transparent),
@@ -131,7 +131,7 @@ class _InventoryPageState extends State<InventoryPage> {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () {
-                            context.goNamed(
+                            context.pushNamed(
                               'product',
                               pathParameters: {
                                 'id': products.data?['data'][index]['id']
@@ -165,15 +165,15 @@ class _InventoryPageState extends State<InventoryPage> {
                           child: ElevatedButton(
                             onPressed: products.data?['links']['prev'] != null
                                 ? () {
-                              setState(() {
-                                future = api.fetchProductPage(
-                                    products.data?['meta']['path'],
-                                    products.data?['meta']
-                                    ['current_page'] -
-                                        1,
-                                    categoryId);
-                              });
-                            }
+                                    setState(() {
+                                      future = api.fetchProductPage(
+                                          products.data?['meta']['path'],
+                                          products.data?['meta']
+                                                  ['current_page'] -
+                                              1,
+                                          categoryId);
+                                    });
+                                  }
                                 : null,
                             child: const Text('Prev'),
                           ),
@@ -183,15 +183,15 @@ class _InventoryPageState extends State<InventoryPage> {
                           child: ElevatedButton(
                             onPressed: products.data?['links']['next'] != null
                                 ? () {
-                              setState(() {
-                                future = api.fetchProductPage(
-                                    products.data?['meta']['path'],
-                                    products.data?['meta']
-                                    ['current_page'] +
-                                        1,
-                                    categoryId);
-                              });
-                            }
+                                    setState(() {
+                                      future = api.fetchProductPage(
+                                          products.data?['meta']['path'],
+                                          products.data?['meta']
+                                                  ['current_page'] +
+                                              1,
+                                          categoryId);
+                                    });
+                                  }
                                 : null,
                             child: const Text('Next'),
                           ),

@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _goHome() {
-    context.goNamed("scanner");
+    context.pushNamed("scanner");
   }
 
   checkIfAllGood() {

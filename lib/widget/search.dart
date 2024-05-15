@@ -36,7 +36,8 @@ class _SearchState extends State<Search> {
             leading: const Icon(Icons.search),
           );
         },
-        suggestionsBuilder:(BuildContext context, SearchController controller) async {
+        suggestionsBuilder:
+            (BuildContext context, SearchController controller) async {
           String query = controller.text;
           List<dynamic> products = [];
 
@@ -50,7 +51,7 @@ class _SearchState extends State<Search> {
               title: Text(
                   "${product['name']} ${product['content']} ${product['unit'] ?? ''}"),
               onTap: () {
-                context.goNamed(
+                context.pushNamed(
                   'product',
                   pathParameters: {
                     'id': product['id'].toString(),
