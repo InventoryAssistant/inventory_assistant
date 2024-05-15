@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
@@ -13,8 +14,19 @@ class InventoryPage extends StatefulWidget {
 
 class _InventoryPageState extends State<InventoryPage> {
   Map<int, bool> state = {};
+  bool canEdit = false;
 
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    api.hasPermission(permission: 'update').then((value) {
+      setState(() {
+        canEdit = value;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,16 +129,30 @@ class _InventoryPageState extends State<InventoryPage> {
                       shrinkWrap: true,
                       itemCount: products.data?['data'].length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              title: Text(
-                                  '${products.data?['data'][index]['name']} ${products.data?['data'][index]['content']} ${products.data?['data'][index]['unit'] ?? ''}'),
-                              trailing: const Icon(Icons.edit),
-                            ),
-                          ],
+                        return InkWell(
+                          onTap: () {
+                            context.goNamed(
+                              'product',
+                              pathParameters: {
+                                'id': products.data?['data'][index]['id']
+                                        .toString() ??
+                                    '',
+                              },
+                            );
+                            debugPrint('Product tapped');
+                          },
+                          child: ListTile(
+                            title: Text(
+                                '${products.data?['data'][index]['name']} ${products.data?['data'][index]['content']} ${products.data?['data'][index]['unit'] ?? ''}'),
+                            trailing: canEdit
+                                ? IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () {
+                                      debugPrint('Edit product: $canEdit');
+                                    },
+                                  )
+                                : null,
+                          ),
                         );
                       },
                     ),

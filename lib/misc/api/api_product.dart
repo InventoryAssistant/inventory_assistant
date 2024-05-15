@@ -121,3 +121,38 @@ Future<List<BaseItem>> fetchUnits() async {
 
   return units;
 }
+
+/// Get specific product from the api
+Future<Map<String, dynamic>> fetchProduct(int id) async {
+  Map<String, dynamic> product = {};
+
+  try {
+    await http.get(
+      Uri.parse('${api.getApiBaseUrl()}/products/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+    ).then((response) {
+      if (response.statusCode == 200) {
+        product = jsonDecode(response.body)['data'];
+      } else {
+        if (kDebugMode) {
+          debugPrint('Request failed with status: ${response.statusCode}');
+        }
+        product = {
+          'name': 'Product not found',
+          'locations': [],
+        };
+      }
+    });
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint('Error: $e');
+      return {'error': 'Something went wrong, try again later.'};
+    }
+  }
+
+  return product;
+}
