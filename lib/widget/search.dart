@@ -1,5 +1,5 @@
+import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Search extends StatefulWidget {
@@ -50,7 +50,12 @@ class _SearchState extends State<Search> {
               title: Text(
                   "${product['name']} ${product['content']} ${product['unit'] ?? ''}"),
               onTap: () {
-                // TODO: go to product page when product page is ready
+                context.goNamed(
+                  'product',
+                  pathParameters: {
+                    'id': product['id'].toString(),
+                  },
+                );
               },
             );
           });
