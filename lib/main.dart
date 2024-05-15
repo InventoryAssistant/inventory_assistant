@@ -4,9 +4,11 @@ import 'package:inventory_assistant/misc/router.dart';
 import 'package:inventory_assistant/misc/theme.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
+bool autoLogin = true;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await api.isLoggedIn(checkAutoLogin: true);
+  autoLogin = !await api.isLoggedIn(checkAutoLogin: true);
 
   runApp(const MyApp());
 }
@@ -19,7 +21,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GoRouter _router = routerGenerator();
+  final GoRouter _router = routerGenerator(autoLogin);
 
   @override
   Widget build(BuildContext context) {

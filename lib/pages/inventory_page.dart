@@ -3,6 +3,7 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
+import 'package:inventory_assistant/widget/search.dart';
 
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
@@ -34,18 +35,7 @@ class _InventoryPageState extends State<InventoryPage> {
       drawer: const CustomDrawer(),
       body: Column(
         children: [
-          TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Theme.of(context).secondaryHeaderColor,
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.zero),
-                borderSide: BorderSide.none,
-              ),
-              labelText: 'Search',
-              hintText: 'Search',
-            ),
-          ),
+          const Search(),
           Expanded(
             child: ListView(
               shrinkWrap: true,
@@ -141,7 +131,7 @@ class _InventoryPageState extends State<InventoryPage> {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () {
-                            context.goNamed(
+                            context.pushNamed(
                               'product',
                               pathParameters: {
                                 'id': products.data?['data'][index]['id']
