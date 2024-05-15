@@ -82,7 +82,7 @@ class _ScannerPageState extends State<ScannerPage> {
                     onPressed: () {
                       addProductModal(
                         context,
-                        barCode: scanResult?.rawContent,
+                        barcode: scanResult?.rawContent,
                         name: product['name'],
                         category: product['category'],
                         content: product['content']?.toDouble(),

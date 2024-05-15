@@ -11,7 +11,7 @@ Future storeProduct({
   required String category,
   required double content,
   required String unit,
-  required String barCode,
+  required String barcode,
   required int shelf,
   required int stock,
   required int location,
@@ -41,7 +41,7 @@ Future storeProduct({
       'category_id': category,
       'content': content,
       'unit_id': unit,
-      'barcode': barCode,
+      'barcode': barcode,
       'locations': locations,
     }),
   );

@@ -9,21 +9,29 @@ final TextEditingController unitController = TextEditingController();
 final TextEditingController locationController = TextEditingController();
 final TextEditingController stockController = TextEditingController();
 final TextEditingController shelfController = TextEditingController();
+Map<String, dynamic> product = {};
 
-Future addProductModal(
+_setProductData(Map<String, dynamic> product) {
+  nameController.text = product['name'];
+  categoryController.text = product['category_id'].toString();
+  contentController.text = product['content'].toString();
+  unitController.text = product['unit_id'].toString();
+  locationController.text = product['location_id'].toString();
+  stockController.text = product['stock'].toString();
+  shelfController.text = product['shelf'].toString();
+}
+
+Future editProductModal(
   BuildContext context, {
-  String? barcode,
-  String? name,
-  String? category,
-  double? content,
-  String? unit,
+  required Map<String, dynamic> product,
 }) async {
+  _setProductData(product);
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         scrollable: true,
-        title: const Text('Add Product'),
+        title: const Text('Edit Product'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -124,7 +132,7 @@ Future addProductModal(
                     category: category,
                     content: content,
                     unit: unit,
-                    barcode: barcode ?? '',
+                    barcode: product['barcode'] ?? '',
                     location: location,
                     stock: stock,
                     shelf: shelf,
