@@ -21,10 +21,10 @@ Future<List<dynamic>> search(query) async {
     ).then((response) {
       if (response.statusCode == 200) {
         // If OK response decode response and set to categories variable
-        var json = jsonDecode(response.body)['data'];
+        final json = jsonDecode(response.body)['data'];
 
         if (kDebugMode) {
-           debugPrint(jsonEncode(jsonDecode(response.body)['data']));
+           debugPrint(jsonEncode(json));
         }
 
         products = json;
