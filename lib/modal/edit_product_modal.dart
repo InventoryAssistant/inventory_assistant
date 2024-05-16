@@ -10,6 +10,7 @@ final TextEditingController unitController = TextEditingController();
 final TextEditingController locationController = TextEditingController();
 final TextEditingController stockController = TextEditingController();
 final TextEditingController shelfController = TextEditingController();
+final TextEditingController barcodeController = TextEditingController();
 Map<String, dynamic> product = {};
 
 _setProductData(Map<String, dynamic> product) {
@@ -20,6 +21,7 @@ _setProductData(Map<String, dynamic> product) {
   locationController.text = product['location_id'].toString();
   stockController.text = product['stock'].toString();
   shelfController.text = product['shelf'].toString();
+  barcodeController.text = product['barcode'].toString();
 }
 
 Future editProductModal(
@@ -79,6 +81,27 @@ Future editProductModal(
                     ),
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Barcode',
+                      labelText: 'Barcode',
+                    ),
+                    controller: barcodeController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter a barcode';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -224,7 +247,7 @@ Future editProductModal(
                             final shelf =
                                 int.tryParse(shelfController.text) ?? 0;
 
-                            await api.updateProduct(
+                            final response = await api.updateProduct(
                               id: product['id'],
                               name: name,
                               categoryId: category,
@@ -235,6 +258,25 @@ Future editProductModal(
                               stock: stock,
                               locationId: location,
                             );
+
+                            if (!context.mounted) {
+                              return;
+                            }
+
+                            if (response) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('User updated successfully'),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('User update failed'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
 
                             Navigator.of(context).pop();
                           },

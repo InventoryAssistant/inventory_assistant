@@ -140,7 +140,6 @@ class _InventoryPageState extends State<InventoryPage> {
                                     '',
                               },
                             );
-                            debugPrint('Product tapped');
                           },
                           child: ListTile(
                             title: Text(
@@ -161,6 +160,8 @@ class _InventoryPageState extends State<InventoryPage> {
                                               [index]['category'],
                                           'content': products.data?['data']
                                               [index]['content'],
+                                          'barcode': products.data?['data']
+                                              [index]['barcode'],
                                           'location_id': products.data?['data']
                                               [index]['locations'][0]['id'],
                                           'location': products.data?['data']
@@ -172,8 +173,6 @@ class _InventoryPageState extends State<InventoryPage> {
                                           'shelf': products.data?['data'][index]
                                                   ['locations'][0]['pivot']
                                               ['shelf_amount'],
-                                          'barcode': products.data?['data']
-                                              [index]['barcode'],
                                           'unit': products.data?['data'][index]
                                               ['unit'],
                                           'unit_id': products.data?['data']
@@ -182,9 +181,11 @@ class _InventoryPageState extends State<InventoryPage> {
                                       );
 
                                       setState(() {
-                                        future =
-                                            api.fetchInventoryByUserLocation(
-                                                categoryId);
+                                        future = api.fetchProductPage(
+                                            products.data?['meta']['path'],
+                                            products.data?['meta']
+                                                ['current_page'],
+                                            categoryId);
                                       });
                                     },
                                   )

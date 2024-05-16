@@ -233,8 +233,6 @@ Future<bool> updateProduct({
     }),
   );
 
-  debugPrint(response.body);
-
   // Check if the request was successful
   return response.statusCode == 200;
 }
