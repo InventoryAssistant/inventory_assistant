@@ -32,9 +32,9 @@ Future addUserModal(
   };
 
   final _formKey = GlobalKey<FormState>();
-  bool _isFormValid = false;
 
-  const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
@@ -60,7 +60,6 @@ Future addUserModal(
                     setState(() {
                       locationIdController.text = value.id.toString();
                       errors['location'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -72,6 +71,10 @@ Future addUserModal(
                     fit: FlexFit.loose,
                   ),
                   validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please choose a location";
+                    }
+
                     if (errors['location'] != null &&
                         errors['location'] != '') {
                       return errors['location'];
@@ -87,7 +90,6 @@ Future addUserModal(
                     setState(() {
                       roleIdController.text = value.id.toString();
                       errors['role'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -99,8 +101,11 @@ Future addUserModal(
                     fit: FlexFit.loose,
                   ),
                   validator: (value) {
-                    if (errors['role'] != null &&
-                        errors['role'] != '') {
+                    if (value == null || value == "") {
+                      return "Please choose a role";
+                    }
+
+                    if (errors['role'] != null && errors['role'] != '') {
                       return errors['role'];
                     }
                     return null;
@@ -114,10 +119,13 @@ Future addUserModal(
                   onChanged: (_) {
                     setState(() {
                       errors['first_name'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please enter a first name";
+                    }
+
                     if (errors['first_name'] != null &&
                         errors['first_name'] != '') {
                       return errors['first_name'];
@@ -133,10 +141,13 @@ Future addUserModal(
                   onChanged: (_) {
                     setState(() {
                       errors['last_name'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please enter a last name";
+                    }
+
                     if (errors['last_name'] != null &&
                         errors['last_name'] != '') {
                       return errors['last_name'];
@@ -151,10 +162,13 @@ Future addUserModal(
                   onChanged: (_) {
                     setState(() {
                       errors['email'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please enter an email";
+                    }
+
                     if (errors['email'] != null && errors['email'] != '') {
                       return errors['email'];
                     }
@@ -168,10 +182,13 @@ Future addUserModal(
                   onChanged: (_) {
                     setState(() {
                       errors['phone_number'] = '';
-                      _isFormValid = _formKey.currentState!.validate();
                     });
                   },
                   validator: (value) {
+                    if (value == null || value == "") {
+                      return "Please enter a phone number";
+                    }
+
                     if (errors['phone_number'] != null &&
                         errors['phone_number'] != '') {
                       return errors['phone_number'];
@@ -193,85 +210,86 @@ Future addUserModal(
                   child: const Text('Cancel'),
                 ),
                 TextButton(
-                  onPressed: !_isFormValid
-                      ? null
-                      : () async {
-                          // add the product to the database
-                          final firstName = firstNameController.text;
-                          final lastName = lastNameController.text;
-                          final locationId =
-                              int.parse(locationIdController.text);
-                          final roleId = int.parse(roleIdController.text);
-                          final email = emailController.text;
-                          final phoneNumber = phoneNumberController.text;
-                          final password = getRandomString(20);
+                  onPressed: () async {
+                    _formKey.currentState!.validate();
 
+                    // add the product to the database
+                    final firstName = firstNameController.text;
+                    final lastName = lastNameController.text;
+                    final locationId = int.parse(locationIdController.text);
+                    final roleId = int.parse(roleIdController.text);
+                    final email = emailController.text;
+                    final phoneNumber = phoneNumberController.text;
+                    final password = getRandomString(20);
 
-                          await api.storeUser(
-                            firstName: firstName,
-                            lastName: lastName,
-                            locationId: locationId,
-                            roleId: roleId,
-                            email: email,
-                            phoneNumber: phoneNumber,
-                            password: password,
-                          ).catchError((error, stackTrace) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  dismissDirection: DismissDirection.none,
-                                  content: Text('$error'),
-                                  backgroundColor: Colors.red,
-                                  showCloseIcon: true,
-                                  duration: const Duration(days: 365)
-                              ),
-                            );
-                            Navigator.of(context).pop();
-                            return error;
-                          }).then((response) {
-                            if(response['status'] == 201){
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  dismissDirection: DismissDirection.none,
-                                  content: Text('$firstName $lastName added with password: $password'),
-                                  showCloseIcon: true,
-                                  duration: const Duration(days: 365),
-                                  action: SnackBarAction(
-                                    onPressed: () async {
-                                      await Clipboard.setData(ClipboardData(text: password));
-                                    },
-                                    label: 'Copy',
-                                  ),
-                                ),
-                              );
-                              Navigator.of(context).pop();
-                            } else if (response.containsKey('errors')) {
-                              setState(() {
-                                errors['first_name'] =
-                                    response['errors']['first_name']?[0] ?? '';
-                                errors['last_name'] =
-                                    response['errors']['last_name']?[0] ?? '';
-                                errors['email'] =
-                                    response['errors']['email']?[0] ?? '';
-                                errors['phone_number'] =
-                                    response['errors']['phone_number']?[0] ?? '';
-                                errors['role'] =
-                                    response['errors']['role']?[0] ?? '';
-                                errors['location'] =
-                                    response['errors']['location']?[0] ?? '';
-                                _isFormValid = _formKey.currentState!.validate();
-                              });
-                            }else{
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  dismissDirection: DismissDirection.none,
-                                  content: Text('${response.containsKey('message') ? response['message'] : response}'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                              Navigator.of(context).pop();
-                            }
-                          });
-                        },
+                    await api
+                        .storeUser(
+                      firstName: firstName,
+                      lastName: lastName,
+                      locationId: locationId,
+                      roleId: roleId,
+                      email: email,
+                      phoneNumber: phoneNumber,
+                      password: password,
+                    )
+                        .catchError((error, stackTrace) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            dismissDirection: DismissDirection.none,
+                            content: Text('$error'),
+                            backgroundColor: Colors.red,
+                            showCloseIcon: true,
+                            duration: const Duration(days: 365)),
+                      );
+                      Navigator.of(context).pop();
+                      return error;
+                    }).then((response) {
+                      if (response['status'] == 201) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            dismissDirection: DismissDirection.none,
+                            content: Text(
+                                '$firstName $lastName added with password: $password'),
+                            showCloseIcon: true,
+                            duration: const Duration(days: 365),
+                            action: SnackBarAction(
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                    ClipboardData(text: password));
+                              },
+                              label: 'Copy',
+                            ),
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      } else if (response.containsKey('errors')) {
+                        setState(() {
+                          errors['first_name'] =
+                              response['errors']['first_name']?[0] ?? '';
+                          errors['last_name'] =
+                              response['errors']['last_name']?[0] ?? '';
+                          errors['email'] =
+                              response['errors']['email']?[0] ?? '';
+                          errors['phone_number'] =
+                              response['errors']['phone_number']?[0] ?? '';
+                          errors['role'] = response['errors']['role']?[0] ?? '';
+                          errors['location'] =
+                              response['errors']['location']?[0] ?? '';
+                          _formKey.currentState!.validate();
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            dismissDirection: DismissDirection.none,
+                            content: Text(
+                                '${response.containsKey('message') ? response['message'] : response}'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    });
+                  },
                   child: const Text('Add'),
                 ),
               ],
