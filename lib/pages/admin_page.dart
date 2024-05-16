@@ -1,6 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
+import 'package:inventory_assistant/modal/add_user_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -23,7 +24,7 @@ class _AdminPageState extends State<AdminPage> {
         title: "Admin",
         trailing: IconButton(
           onPressed: () {
-            null;
+            addUserModal(context);
           },
           icon: const Icon(Icons.add),
         ),
