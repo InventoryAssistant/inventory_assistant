@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inventory_assistant/home.dart';
-import 'package:inventory_assistant/inventory.dart';
-import 'package:inventory_assistant/pages/admin_page.dart';
+import 'package:inventory_assistant/pages/inventory_page.dart';
 import 'package:inventory_assistant/pages/login_page.dart';
+import 'package:inventory_assistant/pages/product_page.dart';
+import 'package:inventory_assistant/pages/admin_page.dart';
+import 'package:inventory_assistant/pages/profile_page.dart';
 import 'package:inventory_assistant/pages/scanner_page.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
-GoRouter routerGenerator() {
+GoRouter routerGenerator(bool autoLogin) {
   final router = GoRouter(
     initialLocation: '/scanner',
     routes: <RouteBase>[
       GoRoute(
         path: '/',
         redirect: (context, state) async {
-          if (!await api.isLoggedIn()) {
-            debugPrint('Redirecting to login');
+          if (!await api.isLoggedIn() || autoLogin) {
+            autoLogin = false;
             return '/login';
           }
-          debugPrint('Redirecting to scanner');
           return null;
         },
         routes: <RouteBase>[
@@ -44,6 +44,14 @@ GoRouter routerGenerator() {
             },
           ),
           GoRoute(
+            name: 'product',
+            path: 'product/:id',
+            builder: (BuildContext context, GoRouterState state) {
+              final int? id = int.tryParse(state.pathParameters['id']!);
+              return ProductPage(id: id);
+            },
+          ),
+          GoRoute(
             name: 'admin',
             path: 'admin',
             builder: (BuildContext context, GoRouterState state) {
@@ -60,7 +68,7 @@ GoRouter routerGenerator() {
             name: 'profile',
             path: 'profile',
             builder: (BuildContext context, GoRouterState state) {
-              return const Home();
+              return const ProfilePage();
             },
           ),
         ],

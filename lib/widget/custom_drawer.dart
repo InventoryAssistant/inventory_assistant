@@ -39,7 +39,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               ),
               title: const Text("Scanner"),
               onTap: () {
-                context.goNamed('scanner');
+                context.pushNamed('scanner');
               },
             ),
             ListTile(
@@ -48,7 +48,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               ),
               title: const Text('Inventory'),
               onTap: () {
-                context.goNamed('inventory');
+                context.pushNamed('inventory');
               },
             ),
             if (isAdmin)
@@ -58,7 +58,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 ),
                 title: const Text('Admin'),
                 onTap: () {
-                  context.goNamed('admin');
+                  context.pushNamed('admin');
                 },
               ),
             const Spacer(),
@@ -68,7 +68,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               ),
               title: const Text('Profile'),
               onTap: () {
-                context.goNamed('profile');
+                context.pushNamed('profile');
               },
             ),
             ListTile(
@@ -82,7 +82,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 // Call api log out function
                 await api.logOut();
                 // Go to login page
-                context.goNamed('login');
+                context.pushNamed('login');
               },
             ),
           ],
