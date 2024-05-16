@@ -62,7 +62,7 @@ Future<Map<String, dynamic>> storeUser({
   // Get the api token
   final token = await getToken();
 
-  // try api call to get products by user location end point
+  // try api call to store user
   try {
     await http
         .post(
@@ -89,10 +89,9 @@ Future<Map<String, dynamic>> storeUser({
       } else {
         // Handle error response
         if (kDebugMode) {
-          log('Request failed with status: ${response.statusCode}');
-          log('Request failed with message: ${jsonDecode(response.body)['message']}');
+          debugPrint('Request failed with status: ${response.statusCode}');
+          debugPrint('Request failed with message: ${jsonDecode(response.body)['message']}');
         }
-        debugPrint("Api response: ${jsonEncode(jsonDecode(response.body))}");
         user.addAll({'status' : response.statusCode});
         user = jsonDecode(response.body);
       }
@@ -129,8 +128,8 @@ Future<List<dynamic>> fetchUsersByLocation(location) async {
       } else {
         // Handle error response
         if (kDebugMode) {
-          log('Request failed with status: ${response.statusCode}');
-          log('Request failed with message: ${jsonDecode(response.body)['message']}');
+          debugPrint('Request failed with status: ${response.statusCode}');
+          debugPrint('Request failed with message: ${jsonDecode(response.body)['message']}');
         }
         return Future.error(
             "Request failed with status: ${response.statusCode} and message: ${jsonDecode(response.body)['message']}");
@@ -170,7 +169,6 @@ Future<List<BaseItem>> fetchLocations() async {
       } else {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          log('Request failed with status: ${response.statusCode}');
         }
       }
     });
