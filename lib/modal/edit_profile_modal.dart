@@ -183,13 +183,13 @@ Future editProfileModal(
                             final password = passwordController.text.isEmpty
                                 ? null
                                 : passwordController.text;
-                            final response = await api.updateUser(
+                            final response = await api.updateProfile(
                               userId: user['id'],
                               firstName: firstNameController.text,
                               lastName: lastNameController.text,
                               email: emailController.text,
                               phoneNumber: phoneController.text,
-                              locatioId: int.parse(locationController.text),
+                              locationId: int.parse(locationController.text),
                               password: password,
                             );
 

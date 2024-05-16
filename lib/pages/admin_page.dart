@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/modal/add_user_modal.dart';
+import 'package:inventory_assistant/modal/edit_user_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -102,7 +103,23 @@ class _AdminPageState extends State<AdminPage> {
                             style: const TextStyle(
                                 fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
-                          trailing: const Icon(Icons.edit),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              editUserModal(
+                                context,
+                                id: users.data?[index]['id'],
+                                firstName: users.data?[index]['first_name'],
+                                lastName: users.data?[index]['last_name'],
+                                location: users.data?[index]['location'],
+                                locationId: users.data?[index]['location_id'],
+                                email: users.data?[index]['email'],
+                                phoneNumber: users.data?[index]['phone_number'],
+                                roleId: users.data?[index]['role_id'],
+                                role: users.data?[index]['role'],
+                              );
+                            },
+                          ),
                           controlAffinity: ListTileControlAffinity.leading,
                           children: <Widget>[
                             Padding(
