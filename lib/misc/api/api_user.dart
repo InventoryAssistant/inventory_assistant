@@ -57,18 +57,16 @@ Future<Map<String, dynamic>> storeUser({
   required String phoneNumber,
   required String password,
 }) async {
-  Map<String, dynamic> response = {};
+  Map<String, dynamic> user = {};
 
   // Get the api token
   final token = await getToken();
-
-  // Send the request to the api
 
   // try api call to get products by user location end point
   try {
     await http
         .post(
-      Uri.parse('${api.getApiBaseUrl()}/products'),
+      Uri.parse('${api.getApiBaseUrl()}/users'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
@@ -85,17 +83,18 @@ Future<Map<String, dynamic>> storeUser({
       }),
     )
         .then((response) {
-      if (response.statusCode == 200) {
-        // If OK response decode response and set to response variable
-        response = jsonDecode(response.body);
+      if (response.statusCode == 201) {
+        // If OK return 201 status
+        user.addAll({'status' : response.statusCode});
       } else {
         // Handle error response
         if (kDebugMode) {
           log('Request failed with status: ${response.statusCode}');
           log('Request failed with message: ${jsonDecode(response.body)['message']}');
         }
-        return Future.error(
-            "Request failed with status: ${response.statusCode} and message: ${jsonDecode(response.body)['message']}");
+        debugPrint("Api response: ${jsonEncode(jsonDecode(response.body))}");
+        user.addAll({'status' : response.statusCode});
+        user = jsonDecode(response.body);
       }
     });
   } catch (e) {
@@ -106,7 +105,7 @@ Future<Map<String, dynamic>> storeUser({
     return Future.error('Error: $e');
   }
 
-  return response;
+  return user;
 }
 
 /// Fetch all users by location
