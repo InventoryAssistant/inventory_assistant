@@ -83,6 +83,7 @@ Future addUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
                 DropdownSearch(
                   asyncItems: (String filter) async {
                     return await api.fetchRoles();
@@ -113,6 +114,7 @@ Future addUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
                 TextFormField(
                   decoration: const InputDecoration(
                       hintText: 'First Name', errorMaxLines: 2),
@@ -136,6 +138,7 @@ Future addUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
                 TextFormField(
                   decoration: const InputDecoration(
                       hintText: 'Last Name', errorMaxLines: 2),
@@ -159,6 +162,7 @@ Future addUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
                 TextFormField(
                   decoration: const InputDecoration(
                       hintText: 'Email', errorMaxLines: 2),
@@ -180,6 +184,7 @@ Future addUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
                 TextFormField(
                   decoration: const InputDecoration(
                       hintText: 'Phone Number', errorMaxLines: 2),
