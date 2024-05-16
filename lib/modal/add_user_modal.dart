@@ -65,6 +65,7 @@ Future addUserModal(
                   dropdownDecoratorProps: const DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
                       labelText: "Location",
+                      errorMaxLines: 2,
                     ),
                   ),
                   popupProps: const PopupProps.menu(
@@ -95,6 +96,7 @@ Future addUserModal(
                   dropdownDecoratorProps: const DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
                       labelText: "Role",
+                      errorMaxLines: 2,
                     ),
                   ),
                   popupProps: const PopupProps.menu(
@@ -112,7 +114,8 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'First Name'),
+                  decoration: const InputDecoration(
+                      hintText: 'First Name', errorMaxLines: 2),
                   controller: firstNameController,
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
@@ -134,7 +137,7 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Last Name'),
+                  decoration: const InputDecoration(hintText: 'Last Name', errorMaxLines: 2),
                   controller: lastNameController,
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
@@ -156,7 +159,7 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Email'),
+                  decoration: const InputDecoration(hintText: 'Email', errorMaxLines: 2),
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (_) {
@@ -176,7 +179,7 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Phone Number'),
+                  decoration: const InputDecoration(hintText: 'Phone Number', errorMaxLines: 2),
                   controller: phoneNumberController,
                   keyboardType: TextInputType.phone,
                   onChanged: (_) {
