@@ -137,7 +137,8 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Last Name', errorMaxLines: 2),
+                  decoration: const InputDecoration(
+                      hintText: 'Last Name', errorMaxLines: 2),
                   controller: lastNameController,
                   keyboardType: TextInputType.name,
                   textCapitalization: TextCapitalization.words,
@@ -159,7 +160,8 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Email', errorMaxLines: 2),
+                  decoration: const InputDecoration(
+                      hintText: 'Email', errorMaxLines: 2),
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (_) {
@@ -179,7 +181,8 @@ Future addUserModal(
                   },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(hintText: 'Phone Number', errorMaxLines: 2),
+                  decoration: const InputDecoration(
+                      hintText: 'Phone Number', errorMaxLines: 2),
                   controller: phoneNumberController,
                   keyboardType: TextInputType.phone,
                   onChanged: (_) {
@@ -214,84 +217,85 @@ Future addUserModal(
                 ),
                 TextButton(
                   onPressed: () async {
-                    _formKey.currentState!.validate();
+                    if (_formKey.currentState!.validate()) {
+                      // add the product to the database
+                      final firstName = firstNameController.text;
+                      final lastName = lastNameController.text;
+                      final locationId = int.parse(locationIdController.text);
+                      final roleId = int.parse(roleIdController.text);
+                      final email = emailController.text;
+                      final phoneNumber = phoneNumberController.text;
+                      final password = getRandomString(20);
 
-                    // add the product to the database
-                    final firstName = firstNameController.text;
-                    final lastName = lastNameController.text;
-                    final locationId = int.parse(locationIdController.text);
-                    final roleId = int.parse(roleIdController.text);
-                    final email = emailController.text;
-                    final phoneNumber = phoneNumberController.text;
-                    final password = getRandomString(20);
-
-                    await api
-                        .storeUser(
-                      firstName: firstName,
-                      lastName: lastName,
-                      locationId: locationId,
-                      roleId: roleId,
-                      email: email,
-                      phoneNumber: phoneNumber,
-                      password: password,
-                    )
-                        .catchError((error, stackTrace) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            dismissDirection: DismissDirection.none,
-                            content: Text('$error'),
-                            backgroundColor: Colors.red,
-                            showCloseIcon: true,
-                            duration: const Duration(days: 365)),
-                      );
-                      Navigator.of(context).pop();
-                      return error;
-                    }).then((response) {
-                      if (response['status'] == 201) {
+                      await api
+                          .storeUser(
+                        firstName: firstName,
+                        lastName: lastName,
+                        locationId: locationId,
+                        roleId: roleId,
+                        email: email,
+                        phoneNumber: phoneNumber,
+                        password: password,
+                      )
+                          .catchError((error, stackTrace) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            dismissDirection: DismissDirection.none,
-                            content: Text(
-                                '$firstName $lastName added with password: $password'),
-                            showCloseIcon: true,
-                            duration: const Duration(days: 365),
-                            action: SnackBarAction(
-                              onPressed: () async {
-                                await Clipboard.setData(
-                                    ClipboardData(text: password));
-                              },
-                              label: 'Copy',
+                              dismissDirection: DismissDirection.none,
+                              content: Text('$error'),
+                              backgroundColor: Colors.red,
+                              showCloseIcon: true,
+                              duration: const Duration(days: 365)),
+                        );
+                        Navigator.of(context).pop();
+                        return error;
+                      }).then((response) {
+                        if (response['status'] == 201) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              dismissDirection: DismissDirection.none,
+                              content: Text(
+                                  '$firstName $lastName added with password: $password'),
+                              showCloseIcon: true,
+                              duration: const Duration(days: 365),
+                              action: SnackBarAction(
+                                onPressed: () async {
+                                  await Clipboard.setData(
+                                      ClipboardData(text: password));
+                                },
+                                label: 'Copy',
+                              ),
                             ),
-                          ),
-                        );
-                        Navigator.of(context).pop();
-                      } else if (response.containsKey('errors')) {
-                        setState(() {
-                          errors['first_name'] =
-                              response['errors']['first_name']?[0] ?? '';
-                          errors['last_name'] =
-                              response['errors']['last_name']?[0] ?? '';
-                          errors['email'] =
-                              response['errors']['email']?[0] ?? '';
-                          errors['phone_number'] =
-                              response['errors']['phone_number']?[0] ?? '';
-                          errors['role'] = response['errors']['role']?[0] ?? '';
-                          errors['location'] =
-                              response['errors']['location']?[0] ?? '';
-                          _formKey.currentState!.validate();
-                        });
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            dismissDirection: DismissDirection.none,
-                            content: Text(
-                                '${response.containsKey('message') ? response['message'] : response}'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                        Navigator.of(context).pop();
-                      }
-                    });
+                          );
+                          Navigator.of(context).pop();
+                        } else if (response.containsKey('errors')) {
+                          setState(() {
+                            errors['first_name'] =
+                                response['errors']['first_name']?[0] ?? '';
+                            errors['last_name'] =
+                                response['errors']['last_name']?[0] ?? '';
+                            errors['email'] =
+                                response['errors']['email']?[0] ?? '';
+                            errors['phone_number'] =
+                                response['errors']['phone_number']?[0] ?? '';
+                            errors['role'] =
+                                response['errors']['role']?[0] ?? '';
+                            errors['location'] =
+                                response['errors']['location']?[0] ?? '';
+                            _formKey.currentState!.validate();
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              dismissDirection: DismissDirection.none,
+                              content: Text(
+                                  '${response.containsKey('message') ? response['message'] : response}'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        }
+                      });
+                    }
                   },
                   child: const Text('Add'),
                 ),
