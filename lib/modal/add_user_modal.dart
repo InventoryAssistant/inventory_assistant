@@ -31,14 +31,14 @@ Future addUserModal(
     'role': '',
   };
 
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
-  const _chars =
+  const chars =
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rnd = Random();
+  Random rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
-      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+      length, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))));
 
   return showDialog(
     context: context,
@@ -48,7 +48,7 @@ Future addUserModal(
           scrollable: true,
           title: const Text('Add User'),
           content: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -217,7 +217,7 @@ Future addUserModal(
                 ),
                 TextButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
+                    if (formKey.currentState!.validate()) {
                       // add the product to the database
                       final firstName = firstNameController.text;
                       final lastName = lastNameController.text;
@@ -281,7 +281,7 @@ Future addUserModal(
                                 response['errors']['role']?[0] ?? '';
                             errors['location'] =
                                 response['errors']['location']?[0] ?? '';
-                            _formKey.currentState!.validate();
+                            formKey.currentState!.validate();
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
