@@ -32,7 +32,6 @@ Future<List<BaseItem>> fetchRoles() async {
       } else {
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          log('Request failed with status: ${response.statusCode}');
         }
       }
     });
@@ -40,7 +39,6 @@ Future<List<BaseItem>> fetchRoles() async {
     // Handle any exceptions that occur
     if (kDebugMode) {
       debugPrint('Error: $e');
-      log('Error: $e');
     }
   }
 
