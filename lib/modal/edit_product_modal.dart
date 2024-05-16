@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
+import 'package:inventory_assistant/misc/extensions/map_extension.dart';
 
 final TextEditingController nameController = TextEditingController();
 final TextEditingController categoryController = TextEditingController();
@@ -12,6 +13,7 @@ final TextEditingController stockController = TextEditingController();
 final TextEditingController shelfController = TextEditingController();
 final TextEditingController barcodeController = TextEditingController();
 Map<String, dynamic> product = {};
+Map<String, dynamic> errors = {};
 
 _setProductData(Map<String, dynamic> product) {
   nameController.text = product['name'];
@@ -70,6 +72,16 @@ Future editProductModal(
                     popupProps: const PopupProps.menu(
                       fit: FlexFit.loose,
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+
+                      if (errors.containsPartialKey('location')) {
+                        return errors[errors.getValue('location')][0];
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -81,6 +93,16 @@ Future editProductModal(
                     ),
                     controller: nameController,
                     textCapitalization: TextCapitalization.words,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter a name';
+                      }
+
+                      if (errors.containsPartialKey('name')) {
+                        return errors[errors.getValue('name')][0];
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -99,6 +121,10 @@ Future editProductModal(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter a barcode';
+                      }
+
+                      if (errors.containsPartialKey('barcode')) {
+                        return errors[errors.getValue('barcode')][0];
                       }
                       return null;
                     },
@@ -123,6 +149,16 @@ Future editProductModal(
                     popupProps: const PopupProps.menu(
                       fit: FlexFit.loose,
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+
+                      if (errors.containsPartialKey('category')) {
+                        return errors[errors.getValue('category')][0];
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -141,7 +177,11 @@ Future editProductModal(
                       // if value is above 65536
                       if (double.tryParse(value) == null ||
                           double.tryParse(value)! > 65535) {
-                        return 'Shelf must be under 65535';
+                        return 'Content must be under 65535';
+                      }
+
+                      if (errors.containsPartialKey('content')) {
+                        return errors[errors.getValue('content')][0];
                       }
                       return null;
                     },
@@ -166,6 +206,16 @@ Future editProductModal(
                     popupProps: const PopupProps.menu(
                       fit: FlexFit.loose,
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+
+                      if (errors.containsPartialKey('unit')) {
+                        return errors[errors.getValue('unit')][0];
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 10,
@@ -187,7 +237,11 @@ Future editProductModal(
                       // if value is above 65536
                       if (int.tryParse(value) == null ||
                           int.tryParse(value)! > 65535) {
-                        return 'Shelf must be under 65535';
+                        return 'Stock must be under 65535';
+                      }
+
+                      if (errors.containsPartialKey('stock')) {
+                        return errors[errors.getValue('stock')][0];
                       }
                       return null;
                     },
@@ -209,10 +263,14 @@ Future editProductModal(
                       if (value == null || value.isEmpty) {
                         return '';
                       }
-                      // if value is above 65536
+
                       if (int.tryParse(value) == null ||
                           int.tryParse(value)! > 65535) {
                         return 'Shelf must be under 65535';
+                      }
+
+                      if (errors.containsPartialKey('shelf')) {
+                        return errors[errors.getValue('shelf')][0];
                       }
                       return null;
                     },
@@ -247,7 +305,8 @@ Future editProductModal(
                             final shelf =
                                 int.tryParse(shelfController.text) ?? 0;
 
-                            final response = await api.updateProduct(
+                            final response = api
+                                .updateProduct(
                               id: product['id'],
                               name: name,
                               categoryId: category,
@@ -257,28 +316,37 @@ Future editProductModal(
                               shelf: shelf,
                               stock: stock,
                               locationId: location,
-                            );
-
-                            if (!context.mounted) {
-                              return;
-                            }
-
-                            if (response) {
+                            )
+                                .catchError((error, stackTrace) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('User updated successfully'),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('User update failed'),
+                                SnackBar(
+                                  content: Text('$error'),
                                   backgroundColor: Colors.red,
                                 ),
                               );
-                            }
+                              Navigator.of(context).pop();
+                              return {'flutter-error': Future.error(error)};
+                            });
 
-                            Navigator.of(context).pop();
+                            response.then((value) {
+                              if (value.containsKey('errors')) {
+                                setState(() {
+                                  errors = value['errors'];
+                                  formKey.currentState!.validate();
+                                });
+                                return;
+                              }
+                              if (value.containsKey('flutter-error')) {
+                                return;
+                              }
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Product updated successfully'),
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            });
                           },
                     child: const Text('Update'),
                   ),
