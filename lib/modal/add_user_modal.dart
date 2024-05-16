@@ -240,11 +240,11 @@ Future addUserModal(
                           .catchError((error, stackTrace) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              dismissDirection: DismissDirection.none,
-                              content: Text('$error'),
-                              backgroundColor: Colors.red,
-                              showCloseIcon: true,
-                              duration: const Duration(days: 365)),
+                            dismissDirection: DismissDirection.none,
+                            content: Text('$error'),
+                            backgroundColor: Colors.red,
+                            showCloseIcon: true,
+                          ),
                         );
                         Navigator.of(context).pop();
                         return error;
