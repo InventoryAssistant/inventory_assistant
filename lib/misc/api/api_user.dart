@@ -92,8 +92,8 @@ Future<Map<String, dynamic>> storeUser({
           debugPrint('Request failed with status: ${response.statusCode}');
           debugPrint('Request failed with message: ${jsonDecode(response.body)['message']}');
         }
-        user.addAll({'status' : response.statusCode});
         user = jsonDecode(response.body);
+        user.addAll({'status' : response.statusCode});
       }
     });
   } catch (e) {
