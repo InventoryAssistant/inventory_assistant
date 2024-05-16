@@ -54,8 +54,7 @@ Future addUserModal(
               children: <Widget>[
                 DropdownSearch(
                   asyncItems: (String filter) async {
-                    final locations = await api.fetchLocations();
-                    return locations;
+                    return await api.fetchLocations();
                   },
                   onChanged: (value) {
                     setState(() {
@@ -82,8 +81,7 @@ Future addUserModal(
                 ),
                 DropdownSearch(
                   asyncItems: (String filter) async {
-                    final roles = await api.fetchRoles();
-                    return roles;
+                    return await api.fetchRoles();
                   },
                   onChanged: (value) {
                     setState(() {
