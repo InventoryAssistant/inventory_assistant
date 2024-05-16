@@ -30,8 +30,7 @@ Future addProductModal(
           children: <Widget>[
             DropdownSearch(
               asyncItems: (String filter) async {
-                final locations = await api.fetchLocations();
-                return locations;
+                return api.fetchLocations();
               },
               onChanged: (value) {
                 locationController.text = value.id.toString();
@@ -52,8 +51,7 @@ Future addProductModal(
             ),
             DropdownSearch(
               asyncItems: (String filter) async {
-                final categories = await api.fetchCategories();
-                return categories;
+                return api.fetchCategories();
               },
               onChanged: (value) {
                 categoryController.text = value.id.toString();
@@ -73,8 +71,7 @@ Future addProductModal(
             ),
             DropdownSearch(
               asyncItems: (String filter) async {
-                final units = await api.fetchUnits();
-                return units;
+                return api.fetchUnits();
               },
               onChanged: (value) {
                 unitController.text = value.id.toString();

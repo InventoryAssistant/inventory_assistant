@@ -57,8 +57,7 @@ Future editProductModal(
                 children: [
                   DropdownSearch(
                     asyncItems: (String filter) async {
-                      final locations = await api.fetchLocations();
-                      return locations;
+                      return api.fetchLocations();
                     },
                     selectedItem: product['location'],
                     onChanged: (value) {
@@ -134,8 +133,7 @@ Future editProductModal(
                   ),
                   DropdownSearch(
                     asyncItems: (String filter) async {
-                      final categories = await api.fetchCategories();
-                      return categories;
+                      return api.fetchCategories();
                     },
                     selectedItem: product['category'],
                     onChanged: (value) {
@@ -191,8 +189,7 @@ Future editProductModal(
                   ),
                   DropdownSearch(
                     asyncItems: (String filter) async {
-                      final units = await api.fetchUnits();
-                      return units;
+                      return api.fetchUnits();
                     },
                     selectedItem: product['unit'],
                     onChanged: (value) {
