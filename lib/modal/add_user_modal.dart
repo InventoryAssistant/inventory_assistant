@@ -207,7 +207,7 @@ Future addUserModal(
                           final password = getRandomString(20);
 
 
-                          final response = await api.storeUser(
+                          await api.storeUser(
                             firstName: firstName,
                             lastName: lastName,
                             locationId: locationId,
@@ -215,44 +215,62 @@ Future addUserModal(
                             email: email,
                             phoneNumber: phoneNumber,
                             password: password,
-                          );
-
-                          if (response.containsKey('errors')) {
-                            setState(() {
-                              errors['first_name'] =
-                                  response['errors']['first_name']?[0] ?? '';
-                              errors['last_name'] =
-                                  response['errors']['last_name']?[0] ?? '';
-                              errors['email'] =
-                                  response['errors']['email']?[0] ?? '';
-                              errors['phone_number'] =
-                                  response['errors']['phone_number']?[0] ?? '';
-                              errors['role'] =
-                                  response['errors']['role']?[0] ?? '';
-                              errors['location'] =
-                                  response['errors']['location']?[0] ?? '';
-                              _isFormValid = _formKey.currentState!.validate();
-                            });
-                          }
-
-                          if(response['status'] == 201){
+                          ).catchError((error, stackTrace) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  dismissDirection: DismissDirection.none,
+                                  content: Text('$error'),
+                                  backgroundColor: Colors.red,
+                                  showCloseIcon: true,
+                                  duration: const Duration(days: 365)
+                              ),
+                            );
+                            Navigator.of(context).pop();
+                            return error;
+                          }).then((response) {
+                            if(response['status'] == 201){
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   dismissDirection: DismissDirection.none,
-                                  content: Text('User added with password: $password'),
+                                  content: Text('$firstName $lastName added with password: $password'),
                                   showCloseIcon: true,
                                   duration: const Duration(days: 365),
                                   action: SnackBarAction(
                                     onPressed: () async {
                                       await Clipboard.setData(ClipboardData(text: password));
-                                      },
+                                    },
                                     label: 'Copy',
                                   ),
                                 ),
                               );
-
-                            Navigator.of(context).pop();
-                          }
+                              Navigator.of(context).pop();
+                            } else if (response.containsKey('errors')) {
+                              setState(() {
+                                errors['first_name'] =
+                                    response['errors']['first_name']?[0] ?? '';
+                                errors['last_name'] =
+                                    response['errors']['last_name']?[0] ?? '';
+                                errors['email'] =
+                                    response['errors']['email']?[0] ?? '';
+                                errors['phone_number'] =
+                                    response['errors']['phone_number']?[0] ?? '';
+                                errors['role'] =
+                                    response['errors']['role']?[0] ?? '';
+                                errors['location'] =
+                                    response['errors']['location']?[0] ?? '';
+                                _isFormValid = _formKey.currentState!.validate();
+                              });
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  dismissDirection: DismissDirection.none,
+                                  content: Text('${response.containsKey('message') ? response['message'] : response}'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            }
+                          });
                         },
                   child: const Text('Add'),
                 ),
