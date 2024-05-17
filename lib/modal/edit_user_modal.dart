@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 // All of the controllers

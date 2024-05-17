@@ -67,6 +67,7 @@ Future<bool> login(
   final String password,
   final bool autologin,
 ) async {
+  await api_token.clearStorage();
   final String url = '${api.getApiBaseUrl()}/auth/login';
 
   final response = await http

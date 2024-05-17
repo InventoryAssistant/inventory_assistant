@@ -263,6 +263,51 @@ Future getCurrentUser() async {
   return user;
 }
 
+Future getUser(int userId) async {
+  // Get the api token
+  final token = await api_token.getToken();
+
+  debugPrint('Token: $token');
+  debugPrint('URL: ${Uri.parse('${api.getApiBaseUrl()}/users/$userId')}');
+
+  // try api call to get user
+  try {
+    return http.get(
+      Uri.parse('${api.getApiBaseUrl()}/users/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then(
+      (response) {
+        if (response.statusCode == 200) {
+          return jsonDecode(response.body)['data'];
+        } else {
+          if (kDebugMode) {
+            debugPrint('Request failed with status: ${response.statusCode}');
+            debugPrint('Request failed body: ${response.body}');
+          }
+          return {
+            'id': 0,
+            'first_name': 'Failed to get user',
+            'last_name': '',
+            'email': '',
+            'phone': '',
+            'location': 0,
+          };
+        }
+      },
+    );
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint('Error: $e');
+    }
+    return Future.error('Error: $e');
+  }
+}
+
 /// Update user information
 Future<bool> updateProfile({
   required int userId,
@@ -350,8 +395,8 @@ Future<Map<String, dynamic>> updateUser({
       }),
     )
         .then((response) {
-      if (response.statusCode == 201) {
-        // If OK return 201 status
+      if (response.statusCode == 200) {
+        // If OK return 200 status
         user.addAll({'status': response.statusCode});
       } else {
         // Handle error response
