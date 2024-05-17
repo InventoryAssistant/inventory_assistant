@@ -2,7 +2,7 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:inventory_assistant/modal/product_modal.dart';
+import 'package:inventory_assistant/modal/add_product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -82,7 +82,7 @@ class _ScannerPageState extends State<ScannerPage> {
                     onPressed: () {
                       addProductModal(
                         context,
-                        barCode: scanResult?.rawContent,
+                        barcode: scanResult?.rawContent,
                         name: product['name'],
                         category: product['category'],
                         content: product['content']?.toDouble(),

@@ -50,7 +50,7 @@ Future<Map<String, dynamic>> fetchInventoryByUserLocation(categoryId) async {
 
   final queryParameters = {
     'category_id': '$categoryId',
-    'paginate' : '5',
+    'paginate': '5',
   };
 
   var uri = Uri.http(api.ipAddress, '/api/products/location', queryParameters);
@@ -100,9 +100,9 @@ Future<Map<String, dynamic>> fetchProductPage(url, page, categoryId) async {
   try {
     await http.get(
       Uri.parse('$url').replace(queryParameters: {
-        'page' : '$page',
-        'category_id' : '$categoryId',
-        'paginate' : '5',
+        'page': '$page',
+        'category_id': '$categoryId',
+        'paginate': '5',
       }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

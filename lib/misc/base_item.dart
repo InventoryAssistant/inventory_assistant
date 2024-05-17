@@ -8,4 +8,6 @@ class BaseItem {
   String toString() {
     return name;
   }
+
+  bool get isEmpty => id == 0 && name.isEmpty;
 }

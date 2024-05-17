@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory_assistant/modal/edit_product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:inventory_assistant/widget/custom_drawer.dart';
@@ -48,8 +49,29 @@ class ProductPageState extends State<ProductPage> {
               trailing: canEdit
                   ? IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        // Edit the product
+                      onPressed: () async {
+                        await editProductModal(
+                          context,
+                          product: {
+                            'id': product['id'],
+                            'name': product['name'],
+                            'category': product['category'],
+                            'category_id': product['category_id'],
+                            'content': product['content'],
+                            'unit_name': product['unit_name'],
+                            'unit': product['unit'],
+                            'unit_id': product['unit_id'],
+                            'barcode': product['barcode'],
+                            'location': product['locations'][0]['address'],
+                            'location_id': product['locations'][0]['id'],
+                            'stock': product['locations'][0]['pivot']['stock'],
+                            'shelf': product['locations'][0]['pivot']
+                                ['shelf_amount'],
+                          },
+                        );
+                        setState(() {
+                          getProduct();
+                        });
                       },
                     )
                   : const SizedBox(),

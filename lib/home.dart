@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_assistant/modal/product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
+import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -52,7 +52,7 @@ class Home extends StatelessWidget {
                         height: 60,
                         child: ElevatedButton(
                           onPressed: () {
-                            addProductModal(context);
+                            api.logOut();
                           },
                           child: const Text("Go to Login Screen"),
                         ),
