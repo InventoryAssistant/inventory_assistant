@@ -58,6 +58,7 @@ class ProductPageState extends State<ProductPage> {
                             'category': product['category'],
                             'category_id': product['category_id'],
                             'content': product['content'],
+                            'unit_name': product['unit_name'],
                             'unit': product['unit'],
                             'unit_id': product['unit_id'],
                             'barcode': product['barcode'],

@@ -175,6 +175,8 @@ class _InventoryPageState extends State<InventoryPage> {
                                               ['shelf_amount'],
                                           'unit': products.data?['data'][index]
                                               ['unit'],
+                                          'unit_name': products.data?['data']
+                                              [index]['unit_name'],
                                           'unit_id': products.data?['data']
                                               [index]['unit_id'],
                                         },

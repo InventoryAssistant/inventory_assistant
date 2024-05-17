@@ -191,7 +191,7 @@ Future editProductModal(
                     asyncItems: (String filter) async {
                       return api.fetchUnits();
                     },
-                    selectedItem: product['unit'],
+                    selectedItem: product['unit_name'],
                     onChanged: (value) {
                       unitController.text = value.id.toString();
                     },
