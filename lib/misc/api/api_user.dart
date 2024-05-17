@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 Future<List<BaseItem>> fetchRoles() async {
   List<BaseItem> role = [];
 
-  final token = await getToken();
+  final token = await api_token.getToken();
 
   try {
     await http.get(
@@ -57,7 +57,7 @@ Future<Map<String, dynamic>> storeUser({
   Map<String, dynamic> user = {};
 
   // Get the api token
-  final token = await getToken();
+  final token = await api_token.getToken();
 
   // try api call to store user
   try {
@@ -96,7 +96,7 @@ Future<Map<String, dynamic>> storeUser({
   } catch (e) {
     // Handle any exceptions that occur
     if (kDebugMode) {
-      log("Error: $e");
+      debugPrint("Error: $e");
     }
     return Future.error('Error: $e');
   }
