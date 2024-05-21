@@ -4,7 +4,7 @@ import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 
 Future addProductModal(
   BuildContext context, {
-  String? barCode,
+  String? barcode,
   String? name,
   String? category,
   double? content,
@@ -30,8 +30,7 @@ Future addProductModal(
           children: <Widget>[
             DropdownSearch(
               asyncItems: (String filter) async {
-                final locations = await api.fetchLocations();
-                return locations;
+                return api.fetchLocations();
               },
               onChanged: (value) {
                 locationController.text = value.id.toString();
@@ -52,8 +51,7 @@ Future addProductModal(
             ),
             DropdownSearch(
               asyncItems: (String filter) async {
-                final categories = await api.fetchCategories();
-                return categories;
+                return api.fetchCategories();
               },
               onChanged: (value) {
                 categoryController.text = value.id.toString();
@@ -73,8 +71,7 @@ Future addProductModal(
             ),
             DropdownSearch(
               asyncItems: (String filter) async {
-                final categories = await api.fetchUnits();
-                return categories;
+                return api.fetchUnits();
               },
               onChanged: (value) {
                 unitController.text = value.id.toString();
@@ -125,7 +122,7 @@ Future addProductModal(
                     category: category,
                     content: content,
                     unit: unit,
-                    barCode: barCode ?? '',
+                    barcode: barcode ?? '',
                     location: location,
                     stock: stock,
                     shelf: shelf,

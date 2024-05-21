@@ -195,6 +195,7 @@ Future<bool> hasPermission({required String permission}) async {
     );
 
     final data = jsonDecode(response.body);
+
     if (data['has_ability'] == true) {
       return true;
     }

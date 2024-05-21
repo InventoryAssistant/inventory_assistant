@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
+import 'package:inventory_assistant/modal/edit_product_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 import 'package:inventory_assistant/widget/search.dart';
@@ -146,8 +147,48 @@ class _InventoryPageState extends State<InventoryPage> {
                             trailing: canEdit
                                 ? IconButton(
                                     icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      debugPrint('Edit product: $canEdit');
+                                    onPressed: () async {
+                                      await editProductModal(
+                                        context,
+                                        product: {
+                                          'id': products.data?['data'][index]
+                                              ['id'],
+                                          'name': products.data?['data'][index]
+                                              ['name'],
+                                          'category_id': categoryId,
+                                          'category': products.data?['data']
+                                              [index]['category'],
+                                          'content': products.data?['data']
+                                              [index]['content'],
+                                          'barcode': products.data?['data']
+                                              [index]['barcode'],
+                                          'location_id': products.data?['data']
+                                              [index]['locations'][0]['id'],
+                                          'location': products.data?['data']
+                                                  [index]['locations'][0]
+                                              ['address'],
+                                          'stock': products.data?['data'][index]
+                                                  ['locations'][0]['pivot']
+                                              ['stock'],
+                                          'shelf': products.data?['data'][index]
+                                                  ['locations'][0]['pivot']
+                                              ['shelf_amount'],
+                                          'unit': products.data?['data'][index]
+                                              ['unit'],
+                                          'unit_name': products.data?['data']
+                                              [index]['unit_name'],
+                                          'unit_id': products.data?['data']
+                                              [index]['unit_id'],
+                                        },
+                                      );
+
+                                      setState(() {
+                                        future = api.fetchProductPage(
+                                            products.data?['meta']['path'],
+                                            products.data?['meta']
+                                                ['current_page'],
+                                            categoryId);
+                                      });
                                     },
                                   )
                                 : null,

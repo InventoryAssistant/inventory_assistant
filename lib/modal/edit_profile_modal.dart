@@ -26,8 +26,8 @@ Future editProfileModal(
 }) {
   setUserData(user);
   // Create a global key for the form
-  final _formKey = GlobalKey<FormState>();
-  bool _isFormValid = false;
+  final formKey = GlobalKey<FormState>();
+  bool isFormValid = false;
 
   return showDialog(
     context: context,
@@ -38,11 +38,11 @@ Future editProfileModal(
             scrollable: true,
             title: const Text('Edit profile'),
             content: Form(
-              key: _formKey,
+              key: formKey,
               onChanged: () {
-                if (_formKey.currentState!.mounted) {
+                if (formKey.currentState!.mounted) {
                   setState(() {
-                    _isFormValid = _formKey.currentState!.validate();
+                    isFormValid = formKey.currentState!.validate();
                   });
                 }
               },
@@ -177,7 +177,7 @@ Future editProfileModal(
                     child: const Text('Reset'),
                   ),
                   ElevatedButton(
-                    onPressed: !_isFormValid
+                    onPressed: !isFormValid
                         ? null
                         : () async {
                             final password = passwordController.text.isEmpty

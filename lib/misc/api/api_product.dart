@@ -11,7 +11,7 @@ Future storeProduct({
   required String category,
   required double content,
   required String unit,
-  required String barCode,
+  required String barcode,
   required int shelf,
   required int stock,
   required int location,
@@ -41,7 +41,7 @@ Future storeProduct({
       'category_id': category,
       'content': content,
       'unit_id': unit,
-      'barcode': barCode,
+      'barcode': barcode,
       'locations': locations,
     }),
   );
@@ -155,4 +155,53 @@ Future<Map<String, dynamic>> fetchProduct(int id) async {
   }
 
   return product;
+}
+
+/// Update a product in the database
+Future<Map<String, dynamic>> updateProduct({
+  required int id,
+  required String name,
+  required String categoryId,
+  required double content,
+  required String unitId,
+  required String barcode,
+  required int shelf,
+  required int stock,
+  required int locationId,
+}) async {
+  // Get the api token
+  final token = await api_token.getToken();
+
+  // Create the locations array for the request
+  final locations = [
+    {
+      'id': locationId,
+      'stock': stock,
+      'shelf_amount': shelf,
+    }
+  ];
+
+  try {
+    // Send the request to the api
+    final response = await http.put(
+      Uri.parse('${api.getApiBaseUrl()}/products/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'name': name,
+        'category_id': categoryId,
+        'content': content,
+        'unit_id': unitId,
+        'barcode': barcode,
+        'locations': locations,
+      }),
+    );
+
+    return jsonDecode(response.body);
+  } catch (e) {
+    return Future.error('Error: $e');
+  }
 }
