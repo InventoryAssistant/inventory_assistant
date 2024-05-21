@@ -51,13 +51,13 @@ To help follow these conventions we use the linter that comes with flutter. You 
 To setup flutter follow their guide [here](https://docs.flutter.dev/get-started/install)<br/>
 After installing Flutter you are almost ready to go, but since our server is hosted internally on the school, you will need to change the ip for the variable `ipAddress` in `api_url.dart` to the one matching your [server](https://github.com/InventoryAssistant).<br>
 After this you should now be ready to run the application. <br>
-To do so symply use the command `flutter run --release` inside your project directory.<br>
+To do so simply use the command `flutter run --release` inside your project directory.<br>
 Alternatively you can use Android studio, here there should be a run button at the top of the IDE.<br>
 
 [[To Top](#inventory-assistant)]
 # Development
 
-Inventory Assistnt is a flutter cross-platform aplication, tested to work on web(Chrome/Firefox) and Android. It should also work on iOS.<br>
+Inventory Assistant is a flutter cross-platform application, tested to work on web(Chrome/Firefox) and Android. It should also work on iOS.<br>
 The backend is a Laravel project tracked in a seperate github repository [here](https://github.com/InventoryAssistant).
 
 [[To Top](#inventory-assistant)]
