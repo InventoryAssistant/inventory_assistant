@@ -254,6 +254,23 @@ Future editUserModal(
                     return null;
                   },
                 ),
+                const SizedBox(height: 10.0),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      hintText: 'Confirm Password', errorMaxLines: 2),
+                  obscureText: true,
+                  onChanged: (_) {
+                    setState(() {
+                      errors['password'] = '';
+                    });
+                  },
+                  validator: (value) {
+                    if (passwordController.text != value) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
               ],
             ),
           ),
