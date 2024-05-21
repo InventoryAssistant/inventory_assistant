@@ -2,6 +2,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
 import 'package:flutter/material.dart';
 import 'package:inventory_assistant/modal/add_user_modal.dart';
+import 'package:inventory_assistant/modal/edit_user_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
 
@@ -71,8 +72,9 @@ class _AdminPageState extends State<AdminPage> {
   }
 
   Widget users(location) {
+    Future<List> userData = api.fetchUsersByLocation(location);
     return FutureBuilder(
-      future: api.fetchUsersByLocation(location),
+      future: userData,
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> users) {
         if (users.hasData) {
           return Padding(
@@ -94,46 +96,73 @@ class _AdminPageState extends State<AdminPage> {
                       child: Theme(
                         data: Theme.of(context)
                             .copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                          key: GlobalKey(),
-                          initiallyExpanded: false,
-                          title: Text(
-                            "${users.data?[index]['first_name']} ${users.data?[index]['last_name']}",
-                            style: const TextStyle(
-                                fontSize: 20.0, fontWeight: FontWeight.bold),
-                          ),
-                          trailing: const Icon(Icons.edit),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 16, left: 16, right: 16),
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "Email: ${users.data?[index]['email']}"),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "Number: ${users.data?[index]['phone_number']}"),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                          "Location: ${users.data?[index]['location']}"),
-                                    ),
-                                  ],
+                        child: StatefulBuilder(builder: (context, setState) {
+                          return ExpansionTile(
+                            key: GlobalKey(),
+                            initiallyExpanded: false,
+                            title: Text(
+                              "${users.data?[index]['first_name']} ${users.data?[index]['last_name']}",
+                              style: const TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () async {
+                                await editUserModal(
+                                  context,
+                                  id: users.data?[index]['id'],
+                                  firstName: users.data?[index]['first_name'],
+                                  lastName: users.data?[index]['last_name'],
+                                  location: users.data?[index]['location'],
+                                  locationId: users.data?[index]['location_id'],
+                                  email: users.data?[index]['email'],
+                                  phoneNumber: users.data?[index]
+                                      ['phone_number'],
+                                  roleId: users.data?[index]['role_id'],
+                                  role: users.data?[index]['role'],
+                                );
+
+                                final data =
+                                    await api.getUser(users.data?[index]['id']);
+                                setState(() {
+                                  if (data != null) {
+                                    users.data?[index] = data;
+                                  }
+                                });
+                              },
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 16, left: 16, right: 16),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            "Email: ${users.data?[index]['email']}"),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            "Number: ${users.data?[index]['phone_number']}"),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            "Location: ${users.data?[index]['location']}"),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          );
+                        }),
                       ),
                     )
                   ],
