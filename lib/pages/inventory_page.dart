@@ -139,7 +139,6 @@ class _InventoryPageState extends State<InventoryPage> {
                                     '',
                               },
                             );
-                            debugPrint('Product tapped');
                           },
                           child: ListTile(
                             title: Text(

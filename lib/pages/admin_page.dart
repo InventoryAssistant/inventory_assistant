@@ -124,9 +124,11 @@ class _AdminPageState extends State<AdminPage> {
 
                                 final data =
                                     await api.getUser(users.data?[index]['id']);
-                                if (data != null) {
-                                  users.data?[index] = data;
-                                }
+                                setState(() {
+                                  if (data != null) {
+                                    users.data?[index] = data;
+                                  }
+                                });
                               },
                             ),
                             controlAffinity: ListTileControlAffinity.leading,

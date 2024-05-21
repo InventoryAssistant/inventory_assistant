@@ -195,7 +195,6 @@ Future<bool> hasPermission({required String permission}) async {
     );
 
     final data = jsonDecode(response.body);
-    debugPrint(data.toString());
     if (data['has_ability'] == true) {
       return true;
     }
@@ -266,9 +265,6 @@ Future getCurrentUser() async {
 Future getUser(int userId) async {
   // Get the api token
   final token = await api_token.getToken();
-
-  debugPrint('Token: $token');
-  debugPrint('URL: ${Uri.parse('${api.getApiBaseUrl()}/users/$userId')}');
 
   // try api call to get user
   try {

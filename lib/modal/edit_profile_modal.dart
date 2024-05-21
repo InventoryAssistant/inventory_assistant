@@ -198,14 +198,12 @@ Future editProfileModal(
                             }
 
                             if (response) {
-                              debugPrint('User updated successfully');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('User updated successfully'),
                                 ),
                               );
                             } else {
-                              debugPrint('User update failed');
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('User update failed'),
