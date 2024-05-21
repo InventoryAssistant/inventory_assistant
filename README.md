@@ -1,16 +1,60 @@
-# inventory_assistant
+# Inventory Assistant
+Inventory assistant is an app to manage inventory. The app uses the barcodes that already exist on products, instead of a seperate asset tag.<br>
 
-A new Flutter project.
+# Table of Contents
 
-## Getting Started
+* [Plugins](#plugins)
+    * [Go Router](#go-router)
+    * [Flutter secure storage](#flutter-secure-storage)
+    * [http](#http)
+    * [Barcode scan2](#barcode-scan2)
+    * [Dropdown search](#dropdown-search)
+    * [Flutter launcher icons](#flutter-launcher-icons)
+* [Conventions](#conventions)
+* [Guide](#guide)
+    * [Setup](#setup)
 
-This project is a starting point for a Flutter application.
+# Plugins
 
-A few resources to get you started if this is your first Flutter project:
+### [Go Router](https://pub.dev/packages/go_router)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+A declarative router for Flutter based on Navigation 2 supporting deep linking, data-driven routes and more
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### [Flutter secure storage](https://pub.dev/packages/flutter_secure_storage)
+
+Flutter Secure Storage provides API to store data in secure storage. Keychain is used in iOS, KeyStore based solution is used in Android.
+
+### [http](https://pub.dev/packages/http)
+A composable, multi-platform, Future-based API for HTTP requests.
+
+### [Barcode scan2](https://pub.dev/packages/barcode_scan2)
+A flutter plugin for scanning 2D barcodes and QRCodes via camera.
+
+### [Dropdown search](https://pub.dev/packages/dropdown_search)
+Simple and robust Searchable Dropdown with item search feature, making it possible to use an offline item list or filtering URL for easy customization.
+
+### [Flutter launcher icons](https://pub.dev/packages/flutter_launcher_icons)
+A package which simplifies the task of updating your Flutter app's launcher icon.
+
+
+# Conventions
+
+It's important to have some conventions to follow, to make our code more readable and less confusing.<br/>
+To help follow these conventions we use the linter that comes with flutter. You can read the official code style for dart [here](https://dart.dev/guides/language/effective-dart/style)
+
+# Guide
+
+### Setup
+
+To setup flutter follow their guide [here](https://docs.flutter.dev/get-started/install)<br/>
+After installing Flutter you are almost ready to go, but since our server is hosted internally on the school, you will need to change the ip for the variable `ipAddress` in `api_url.dart` to the one matching your [server](https://github.com/InventoryAssistant).<br>
+After this you should now be ready to run the application. <br>
+To do so symply use the command `flutter run --release` inside your project directory.<br>
+Alternatively you can use Android studio, here there should be a run button at the top of the IDE.<br>
+
+### Development
+
+Inventory Assistnt is a flutter cross-platform aplication, tested to work on web(Chrome/Firefox) and Android. It should also work on iOS.<br>
+The backend is a Laravel project tracked in a seperate github repository [here](https://github.com/InventoryAssistant).
+
+[[To Top](#table-of-contents)]
