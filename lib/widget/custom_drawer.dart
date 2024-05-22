@@ -14,11 +14,9 @@ class CustomDrawerState extends State<CustomDrawer> {
   @override
   void initState() {
     api.isAdmin().then((value) {
-      if (value) {
-        setState(() {
-          isAdmin = true;
-        });
-      }
+      setState(() {
+        isAdmin = value;
+      });
     });
     super.initState();
   }

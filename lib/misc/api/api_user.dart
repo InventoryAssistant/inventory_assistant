@@ -82,15 +82,16 @@ Future<Map<String, dynamic>> storeUser({
         .then((response) {
       if (response.statusCode == 201) {
         // If OK return 201 status
-        user.addAll({'status' : response.statusCode});
+        user.addAll({'status': response.statusCode});
       } else {
         // Handle error response
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          debugPrint('Request failed with message: ${jsonDecode(response.body)['message']}');
+          debugPrint(
+              'Request failed with message: ${jsonDecode(response.body)['message']}');
         }
         user = jsonDecode(response.body);
-        user.addAll({'status' : response.statusCode});
+        user.addAll({'status': response.statusCode});
       }
     });
   } catch (e) {
@@ -126,7 +127,8 @@ Future<List<dynamic>> fetchUsersByLocation(location) async {
         // Handle error response
         if (kDebugMode) {
           debugPrint('Request failed with status: ${response.statusCode}');
-          debugPrint('Request failed with message: ${jsonDecode(response.body)['message']}');
+          debugPrint(
+              'Request failed with message: ${jsonDecode(response.body)['message']}');
         }
         return Future.error(
             "Request failed with status: ${response.statusCode} and message: ${jsonDecode(response.body)['message']}");
@@ -261,14 +263,56 @@ Future getCurrentUser() async {
   return user;
 }
 
+Future getUser(int userId) async {
+  // Get the api token
+  final token = await api_token.getToken();
+
+  // try api call to get user
+  try {
+    return http.get(
+      Uri.parse('${api.getApiBaseUrl()}/users/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    ).then(
+      (response) {
+        if (response.statusCode == 200) {
+          return jsonDecode(response.body)['data'];
+        } else {
+          if (kDebugMode) {
+            debugPrint('Request failed with status: ${response.statusCode}');
+            debugPrint('Request failed body: ${response.body}');
+          }
+          return {
+            'id': 0,
+            'first_name': 'Failed to get user',
+            'last_name': '',
+            'email': '',
+            'phone': '',
+            'location': 0,
+          };
+        }
+      },
+    );
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint('Error: $e');
+    }
+    return Future.error('Error: $e');
+  }
+}
+
 /// Update user information
-Future<bool> updateUser({
+Future<bool> updateProfile({
   required int userId,
   required String firstName,
   required String lastName,
   required String email,
   required String phoneNumber,
-  required int locatioId,
+  required int locationId,
   required String? password,
 }) async {
   final token = await api_token.getToken();
@@ -287,7 +331,7 @@ Future<bool> updateUser({
         'last_name': lastName,
         'email': email,
         'phone_number': phoneNumber,
-        'location_id': locatioId,
+        'location_id': locationId,
         if (password != null) 'password': password,
       }),
     )
@@ -309,4 +353,66 @@ Future<bool> updateUser({
     }
     return false;
   }
+}
+
+/// Store user
+Future<Map<String, dynamic>> updateUser({
+  required int userId,
+  required String firstName,
+  required String lastName,
+  required int locationId,
+  required int roleId,
+  required String email,
+  required String phoneNumber,
+  required String? password,
+}) async {
+  Map<String, dynamic> user = {};
+
+  // Get the api token
+  final token = await api_token.getToken();
+
+  // try api call to store user
+  try {
+    await http
+        .put(
+      Uri.parse('${api.getApiBaseUrl()}/users/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'first_name': firstName,
+        'last_name': lastName,
+        'location_id': locationId,
+        'role_id': roleId,
+        'email': email,
+        'phone_number': phoneNumber,
+        if (password != null) 'password': password,
+      }),
+    )
+        .then((response) {
+      if (response.statusCode == 200) {
+        // If OK return 200 status
+        user.addAll({'status': response.statusCode});
+      } else {
+        // Handle error response
+        if (kDebugMode) {
+          debugPrint('Request failed with status: ${response.statusCode}');
+          debugPrint(
+              'Request failed with message: ${jsonDecode(response.body)['message']}');
+        }
+        user = jsonDecode(response.body);
+        user.addAll({'status': response.statusCode});
+      }
+    });
+  } catch (e) {
+    // Handle any exceptions that occur
+    if (kDebugMode) {
+      debugPrint("Error: $e");
+    }
+    return Future.error('Error: $e');
+  }
+
+  return user;
 }
