@@ -31,8 +31,6 @@ Future changePasswordModal(
     'password': '',
   };
 
-  debugPrint('user: $user');
-
   Map<String, dynamic> errors = {
     'password': '',
   };
