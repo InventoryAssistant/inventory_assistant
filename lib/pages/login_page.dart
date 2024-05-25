@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inventory_assistant/misc/api/api_lib.dart' as api;
+import 'package:inventory_assistant/modal/change_password_modal.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
-  late Timer timer;
   bool autologin = false;
   bool loginFail = false;
   bool passwordEntered = false;
@@ -186,9 +184,27 @@ class _LoginPageState extends State<LoginPage> {
       // unfocus the textfield
       emailFocusNode.unfocus();
       passwordFocusNode.unfocus();
+      final currentUser = await api.getCurrentUser();
+      debugPrint('current user: $currentUser');
 
-      // Navigate to the home screen
-      _goHome();
+      if (currentUser['id'] != 0 &&
+          currentUser['first_login'] != null &&
+          currentUser['first_login']) {
+        changePasswordModal(
+          context,
+          id: currentUser['id'],
+          firstName: currentUser['first_name'],
+          lastName: currentUser['last_name'],
+          email: currentUser['email'],
+          phoneNumber: currentUser['phone'],
+          location: currentUser['location'],
+          locationId: currentUser['location_id'],
+          role: currentUser['role'],
+          roleId: currentUser['role_id'],
+        );
+      } else {
+        _goHome();
+      }
     } else {
       // Clear password, fail login and display error message
       passwordController.clear();
