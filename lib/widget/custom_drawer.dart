@@ -75,8 +75,6 @@ class CustomDrawerState extends State<CustomDrawer> {
               ),
               title: const Text('Sign Out'),
               onTap: () async {
-                // Close Drawer
-                Scaffold.of(context).closeDrawer();
                 // Call api log out function
                 await api.logOut();
                 // Go to login page

@@ -215,9 +215,10 @@ Future<bool> hasPermission({required String permission}) async {
 }
 
 /// Get current user information
-Future getCurrentUser() async {
+Future<Map<String, dynamic>> getCurrentUser() async {
   Map<String, dynamic> user = {};
   final token = await api_token.getToken();
+  debugPrint('Token: $token');
 
   try {
     await http.get(
@@ -229,14 +230,19 @@ Future getCurrentUser() async {
       },
     ).then((response) {
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        final data = jsonDecode(response.body)['data'];
+
         user = {
           'id': data['id'],
           'first_name': data['first_name'],
           'last_name': data['last_name'],
           'email': data['email'],
           'phone': data['phone_number'],
-          'location': data['location_id'],
+          'location_id': data['location_id'],
+          'location': data['location'],
+          'role_id': data['role_id'],
+          'role': data['role'],
+          'first_login': data['first_login'],
         };
       } else {
         if (kDebugMode) {

@@ -1,4 +1,3 @@
-
 library api;
 
 export 'api_url.dart';
@@ -10,4 +9,3 @@ export 'api_inventory.dart';
 export 'api_product.dart';
 export 'api_user.dart';
 export 'api_search.dart';
-export 'api_location.dart';

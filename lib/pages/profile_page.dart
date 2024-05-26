@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inventory_assistant/misc/base_item.dart';
 import 'package:inventory_assistant/modal/edit_profile_modal.dart';
 import 'package:inventory_assistant/widget/custom_appbar.dart';
 import 'package:inventory_assistant/widget/custom_drawer.dart';
@@ -17,9 +16,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<Map<String, dynamic>> getUserData() async {
     user = await api.getCurrentUser();
-    BaseItem location = await api.getLocationById(user['location']);
-    user['location'] = location.name;
-    user['location_id'] = location.id;
     return user;
   }
 
