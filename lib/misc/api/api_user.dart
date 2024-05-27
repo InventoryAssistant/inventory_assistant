@@ -380,7 +380,7 @@ Future<Map<String, dynamic>> updateUser({
   try {
     await http
         .put(
-      Uri.parse('${api.getApiBaseUrl()}/users/$userId'),
+      Uri.parse('${api.getApiBaseUrl()}/user/$userId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
