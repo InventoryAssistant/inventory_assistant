@@ -218,7 +218,6 @@ Future<bool> hasPermission({required String permission}) async {
 Future<Map<String, dynamic>> getCurrentUser() async {
   Map<String, dynamic> user = {};
   final token = await api_token.getToken();
-  debugPrint('Token: $token');
 
   try {
     await http.get(

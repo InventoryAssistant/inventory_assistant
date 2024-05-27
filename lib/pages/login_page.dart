@@ -185,7 +185,6 @@ class _LoginPageState extends State<LoginPage> {
       emailFocusNode.unfocus();
       passwordFocusNode.unfocus();
       final currentUser = await api.getCurrentUser();
-      debugPrint('current user: $currentUser');
 
       if (currentUser['id'] != 0 &&
           currentUser['first_login'] != null &&
