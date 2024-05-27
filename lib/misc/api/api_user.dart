@@ -319,6 +319,7 @@ Future<bool> updateProfile({
   required String phoneNumber,
   required int locationId,
   required String? password,
+  int? roleId,
 }) async {
   final token = await api_token.getToken();
 
@@ -380,7 +381,7 @@ Future<Map<String, dynamic>> updateUser({
   try {
     await http
         .put(
-      Uri.parse('${api.getApiBaseUrl()}/user/$userId'),
+      Uri.parse('${api.getApiBaseUrl()}/users/$userId'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': 'application/json',
