@@ -17,9 +17,15 @@ class _ScannerPageState extends State<ScannerPage> {
   ScanResult? scanResult;
 
   Map<String, dynamic> product = {};
+  bool canAdd = false;
 
   @override
   void initState() {
+    api.hasPermission(permission: 'create').then((value) {
+      setState(() {
+        canAdd = value;
+      });
+    });
     super.initState();
   }
 
@@ -77,19 +83,21 @@ class _ScannerPageState extends State<ScannerPage> {
                 Positioned(
                   top: 10,
                   right: 10,
-                  child: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      addProductModal(
-                        context,
-                        barcode: scanResult?.rawContent,
-                        name: product['name'],
-                        category: product['category'],
-                        content: product['content']?.toDouble(),
-                        unit: product['unit'],
-                      );
-                    },
-                  ),
+                  child: canAdd
+                      ? IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            addProductModal(
+                              context,
+                              barcode: scanResult?.rawContent,
+                              name: product['name'],
+                              category: product['category'],
+                              content: product['content']?.toDouble(),
+                              unit: product['unit'],
+                            );
+                          },
+                        )
+                      : const Text(""),
                 ),
               ],
             ),
