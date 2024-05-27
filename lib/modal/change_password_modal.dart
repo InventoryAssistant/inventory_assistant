@@ -106,7 +106,7 @@ Future changePasswordModal(
                       final password = passwordController.text;
 
                       await api
-                          .updateUser(
+                          .updateProfile(
                         userId: user['id'],
                         firstName: user['first_name'],
                         lastName: user['last_name'],
@@ -128,7 +128,7 @@ Future changePasswordModal(
                         Navigator.of(context).pop();
                         return error;
                       }).then((response) {
-                        if (response['status'] == 200) {
+                        if (response) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               dismissDirection: DismissDirection.none,
@@ -136,18 +136,12 @@ Future changePasswordModal(
                             ),
                           );
                           context.pushNamed('scanner');
-                        } else if (response.containsKey('errors')) {
-                          setState(() {
-                            errors['password'] =
-                                response['errors']['password']?[0] ?? '';
-                            formKey.currentState!.validate();
-                          });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               dismissDirection: DismissDirection.none,
                               content: Text(
-                                  '${response.containsKey('message') ? response['message'] : response}'),
+                                  'Failed to update password. Please try again.'),
                               backgroundColor: Colors.red,
                             ),
                           );
